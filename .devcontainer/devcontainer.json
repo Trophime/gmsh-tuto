@@ -1,0 +1,47 @@
+{
+	"name": "Gmsh Dev UB 22.04",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [
+		"--runtime=nvidia",
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined",
+		"--net",
+		"host",
+		"-e", "DISPLAY=${env:DISPLAY}",
+		"-e", "QT_X11_NO_MITSHM=1",
+		"-v", "/tmp/.X11-unix:/tmp/.X11-unix"
+	],
+	// Add the IDs of extensions you want installed when the container is created in the array below.
+	"customizations": {
+		"settings": {
+			"terminal.integrated.defaultProfile.linux": "bash",
+			"python.defaultInterpreterPath": "/usr/bin/python",
+			"python.formatting.autopep8Path": "/usr/bin/autopep8",
+			"python.formatting.blackPath": "/usr/bin/black",
+			"python.formatting.yapfPath": "/usr/bin/yapf3",
+			"python.linting.banditPath": "/usr/bin/bandit",
+			"python.linting.flake8Path": "/usr/bin/flake8",
+			"python.linting.mypyPath": "/usr/bin/mypy",
+			"python.linting.pycodestylePath": "/usr/bin/pycodestyle",
+			"python.linting.pydocstylePath": "/usr/bin/pydocstyle",
+			"python.linting.pylintPath": "/usr/bin/pylint",
+			"python.testing.pytestPath": "/usr/bin/pytest-3"
+		},
+		// Add the IDs of extensions you want installed when the container is created in the array below.
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cpptools",
+				"ms-vscode.cmake-tools",
+				"josetr.cmake-language-support-vscode",
+				"asciidoctor.asciidoctor-vscode",
+				"ms-python.python",
+				"ms-toolsai.jupyter",
+				"Bertrand-Thierry.vscode-gmsh",
+				"vscode-icons-team.vscode-icons"
+			]
+		}
+	}
+}
