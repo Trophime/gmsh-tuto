@@ -73,6 +73,22 @@ def main():
     gmsh.model.setPhysicalName(1, ps, name="My line")
 
     if args.mesh:
+        MeshAlgo2D = {
+            "MeshAdapt": 1,
+            "Automatic": 2,
+            "Initial": 3,
+            "Delaunay": 5,
+            "Frontal-Delaunay": 6,
+            "BAMG": 7,
+        }
+        
+        # Meshing algorithms can changed globally using options:
+        gmsh.option.setNumber("Mesh.Algorithm", MeshAlgo2D["Frontal-Delaunay"])  # Frontal-Delaunay for 2D meshes
+
+        # They can also be set for individual surfaces, e.g. for using `MeshAdapt' on
+        # surface 1:
+        gmsh.model.mesh.setAlgorithm(2, _id, MeshAlgo2D["MeshAdapt"])
+
         # set mesh characteristic size
         gmsh.model.mesh.setSize(gmsh.model.getEntities(0), lc)
 
