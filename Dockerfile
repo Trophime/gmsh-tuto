@@ -1,6 +1,6 @@
 # -*- mode: Dockerfile -*-
 
-ARG BASE=nvidia/opengl:1.2-glvnd-devel-ubuntu22.04
+ARG BASE=trophime/opengl:1.7.0-glvnd-runtime-ubuntu24.04
 
 FROM ${BASE}
 LABEL maintainer Christophe Trophime <christophe.trophime@lncmi.cnrs.fr>
@@ -42,9 +42,9 @@ RUN apt-get update \
     # Install python tools\
     && apt-get -y install python3-minimal libpython3-dev python3-env swig \
     && apt-get -y install python-is-python3 python3-pip python3-jinja2 \
-    && apt-get -y install python3-autopep8 black yapf3 python3-bandit flake8 pydocstyle pylint python3-pytest mypy
+    && apt-get -y install python3-autopep8 black yapf3 python3-bandit flake8 pydocstyle pylint python3-pytest mypy \
     && apt install libglu1-mesa libxcursor1 libxinerama1
-    
+
 
 # Eventually add USERNAME to VGLUSERS group (to be created if not present)
 # for dev:
@@ -60,15 +60,12 @@ RUN mkdir -p ~${USERNAME}/.ssh/ \
 
 # Switch to USERNAME
 USER ${USERNAME}
-WORKDIR /home/${USERNAME}
-
-# Install gmsh locally
-RUN python -m venv --system-site-packages gmsh-env && \
-    source /home/${USERNAME}/gmsh-env/bin/activate && \
-    pip install --upgrade pip && \
-    pip install gmsh 
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
-CMD ["source", "/home/${USERNAME}/gmsh-env/bin/activate"]
+COPY start-venv.sh /home/${USERNAME}
+RUN /home/${USERNAME}/start-venv.sh
+
+WORKDIR /home/${USERNAME}
+CMD [ "source", "/home/${USERNAME}/gmsh-env/bin/activate" ]
