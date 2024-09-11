@@ -21,12 +21,6 @@ jobs:
             ref: ${{ github.head_ref }}
             fetch-depth: 0
             token: ${{ secrets.CR_PAT_WORKFLOW }}
-        - name: Rename project
-          shell: bash
-          run: |
-            bash rename.sh $GITHUB_REPOSITORY 
-          env:
-            GITHUB_TOKEN: ${{secrets.CR_PAT_WORKFLOW}}
         - name: Commit files
           run: |
             git config --local user.email "github-actions[bot]@users.noreply.github.com"
