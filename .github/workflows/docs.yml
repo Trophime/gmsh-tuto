@@ -35,7 +35,7 @@ jobs:
     - name: Build Site
       run: |
           cd slidev
-          slidev build --base /gmsh-tuto/slidev/
+          slidev build --base /gmsh-tuto/
     - name: Deploy
       if: ${{ github.ref_name == 'main' }}
       uses: JamesIves/github-pages-deploy-action@v4
