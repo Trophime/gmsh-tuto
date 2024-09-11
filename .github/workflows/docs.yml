@@ -5,13 +5,11 @@ on:
     branches: 
       - '**' # Push events on all branches
     paths:
-      - 'docs/**'
-      - 'package*.json'
-      - 'site.yml'
-      - 'generate-jupyter.sh'
-      - 'netlify*'
+      - 'slidev/pages/**'
+      - 'slidev/package*.json'
+      - 'slidev/slides.md'
+      - 'slidev/netlify*'
       - '.github/workflows/docs.yml'
-      - 'requirements.txt'
       - '!.github/workflows/ci.yml'
       - '!.github/workflows/init.yml'
     tags:
@@ -34,12 +32,12 @@ jobs:
           cd slidev
           npm install
           npm i -g @slidev/cli
-    - name: Build Antora Site
+    - name: Build Site
       run: |
           cd slidev
           slidev build --base /gmsh-tuto/
     - name: Deploy
-      if: ${{ github.ref_name == 'master' }}
+      if: ${{ github.ref_name == 'main' }}
       uses: JamesIves/github-pages-deploy-action@v4
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
