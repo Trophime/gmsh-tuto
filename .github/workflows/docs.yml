@@ -42,7 +42,7 @@ jobs:
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages # The branch the action should deploy to.
-          folder: dist # The folder the action should deploy.
+          folder: slidev/dist # The folder the action should deploy.
           clean: true
           clean-exclude: |
             .nojekyll
