@@ -43,6 +43,9 @@ RUN apt-get update \
     && apt-get -y install python3-minimal libpython3-dev swig \
     && apt-get -y install python-is-python3 python3-venv python3-jinja2 \
     && apt-get -y install python3-autopep8 black yapf3 python3-bandit flake8 pydocstyle pylint python3-pytest mypy \
+    # Install nodejs for docs \
+    && apt-get -y install nodejs npm \
+    # Install needed for gmsh \
     # Install gmsh required packages \
     && apt-get -y install libglu1-mesa libxcursor1 libxinerama1
 
