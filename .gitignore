@@ -121,3 +121,6 @@ log*
 *.hdf
 *.orig
 *.old
+
+# asciidoc slides
+asciidocs
