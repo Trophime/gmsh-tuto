@@ -35,14 +35,14 @@ jobs:
     - name: Build Site
       run: |
           cd slidev
-          slidev build --base /gmsh-tuto/
+          slidev build --base /gmsh-tuto/slidev/
     - name: Deploy
       if: ${{ github.ref_name == 'main' }}
       uses: JamesIves/github-pages-deploy-action@v4
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages # The branch the action should deploy to.
-          folder: public # The folder the action should deploy.
+          folder: dist # The folder the action should deploy.
           clean: true
           clean-exclude: |
             .nojekyll
