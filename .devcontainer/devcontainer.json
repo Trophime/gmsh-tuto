@@ -40,7 +40,8 @@
 				"ms-python.python",
 				"ms-toolsai.jupyter",
 				"Bertrand-Thierry.vscode-gmsh",
-				"vscode-icons-team.vscode-icons"
+				"vscode-icons-team.vscode-icons",
+				"antfu.slidev"
 			]
 		}
 	}

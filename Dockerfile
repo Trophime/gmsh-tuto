@@ -43,6 +43,7 @@ RUN apt-get update \
     && apt-get -y install python3-minimal libpython3-dev python3-env swig \
     && apt-get -y install python-is-python3 python3-pip python3-jinja2 \
     && apt-get -y install python3-autopep8 black yapf3 python3-bandit flake8 pydocstyle pylint python3-pytest mypy \
+    # Install needed for gmsh \
     && apt install libglu1-mesa libxcursor1 libxinerama1
 
 
