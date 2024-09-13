@@ -5,12 +5,10 @@ theme: seriph
 # like them? see https://unsplash.com/collections/94734566/slidev
 background: https://cover.sli.dev
 # some information about your slides (markdown enabled)
-title: Welcome to Slidev
+title: Gmsh Tutorial
 info: |
   ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
+  a guide to start with Gmsh.
 # apply unocss classes to the current slide
 class: text-center
 # https://sli.dev/features/drawing
@@ -108,7 +106,7 @@ Here is another comment.
   * Docker
   * Singularity
 
-For this tutorial,  we recommend to use the python virtual environment.
+For this tutorial, we recommend to use the python virtual environment.
 
 
 ---
@@ -117,17 +115,261 @@ image: https://cover.sli.dev
 ---
 # GUI
 
-* Presentation
-* Built-In Geometry kernel
-* OCC Geometry kernel
+* Main Options
+* Custom Options
+
+---
+level: 2
+---
+
+# Build-In Kernel
+
+<!--
+<Tweet id="1390115482657726468" scale="0.65" />
+<Youtube id="nkuawZkiu1w" scale="0.7" />
+-->
+
+<iframe width="960" height="569" src="https://www.youtube.com/embed/nkuawZkiu1w" title="Creating a simple geometry with Gmsh" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 
 ---
 
-# TUI
+* example with a cube
+* save geo
+* replay/reload geo
+* add params
 
-* Presentation
-* Built-In Geometry kernel
-* OCC Geometry kernel
+* use TUI mode
+
+---
+layout: two-cols
+level: 3
+---
+
+# Cube with Hole
+
+* start from a **square**
+
+::right::
+
+```gmsh {maxHeight:'100px'}
+SetFactory("Built-in");
+
+Lc = DefineNumber[ 0.1, Name "Parameters/Lc" ];
+Lx = DefineNumber[ 0.25, Name "Parameters/Lx" ];
+Ly = DefineNumber[ 0.25, Name "Parameters/Ly" ];
+
+// create square
+Point(1) = {-Lx, -Ly, 0, Lc};
+Point(2) = {Lx, -Ly, 0, Lc};
+Point(3) = {Lx, Ly, 0, Lc};
+Point(4) = {-Lx, Ly, 0, Lc};
+
+
+Line(1) = {1, 2};
+Line(2) = {2, 3};
+Line(3) = {3, 4};
+Line(4) = {4, 1};
+
+Curve Loop(1) = {1:4};
+Plane Surface(1) = {1};
+
+Physical Surface("Top") = {1};
+Physical Curve("Ox") = {1};
+```
+
+---
+layout: two-cols
+level: 3
+---
+
+# Cube with Hole
+
+* start from a **square**
+* extrude the **square** 
+
+* Extrude command returns a list: 
+  * the "top" of the extruded surface (in out[0]), 
+  * the newly created volume (in out[1]) 
+  * the ids of the lateral surfaces (in out[2], out[3], ...)
+
+::right::
+
+```gmsh {maxHeight:'100px'}
+Include "square.geo";
+
+// extrude
+Lz = DefineNumber[ 0.25, Name "Parameters/Lz" ];
+out[] = Extrude {0, 0, Lz} {Surface{1};};
+
+// see http://gmsh.info/doc/texinfo/gmsh.html#Expressions
+For i In {0 : #out[]-1}
+   Printf("Out[%g]=%g", i, out[i]);
+EndFor
+
+Physical Surface("Bottom") = {out[0]};
+Physical Surface("Other") = {out[2], out[3], out[4], out[5]};
+Physical Volume("Cube") = {out[1]};
+```
+
+---
+layout: two-cols
+level: 3
+---
+
+# Cube with Hole
+
+* start from a **square**
+* define **hole**
+
+Note the sign of the Curve Loop defining the surface
+
+::right::
+
+```gmsh {maxHeight:'100px'}
+Include "square.geo";
+
+// Add parameters
+Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
+R = DefineNumber[ 0.05, Name "Parameters/R" ];
+
+// create a Disk
+O=newp; Point(O) = {0,0,0,Lc};
+
+p5=newp; Point(p5) = { R,  0, 0, Lc_h};
+p6=newp; Point(p6) = { 0,  R, 0, Lc_h};
+p7=newp; Point(p7) = {-R,  0, 0, Lc_h};
+p8=newp; Point(p8) = { 0, -R, 0, Lc_h};
+
+c5=newl; Circle(c5) = {p5,O,p6};
+c6=newl; Circle(c6) = {p6,O,p7};
+c7=newl; Circle(c7) = {p7,O,p8};
+c8=newl; Circle(c8) = {p8,O,p5};
+
+// create square with a hole
+Curve Loop(2) = {c5:c8};
+Plane Surface(1) = {1, -2};
+```
+---
+layout: two-cols
+level: 3
+---
+
+# Cube with Hole
+
+* create a macro for **hole**
+
+::right::
+
+```gmsh {maxHeight:'100px'}
+Include "square.geo";
+
+// create a Disk
+Macro CHole
+      O=newp; Point(O) = {x0,y0,0,Lc};
+
+      p5=newp; Point(p5) = { x0+R,  y0,  0, Lc_h};
+      p6=newp; Point(p6) = { x0,  y0+R, 0, Lc_h};
+      p7=newp; Point(p7) = { x0-R, y0,  0, Lc_h};
+      p8=newp; Point(p8) = { x0, y0-R,  0, Lc_h};
+
+      c5=newl; Circle(c5) = {p5,O,p6};
+      c6=newl; Circle(c6) = {p6,O,p7};
+      c7=newl; Circle(c7) = {p7,O,p8};
+      c8=newl; Circle(c8) = {p8,O,p5};
+
+      loop[t] = newl;
+      Curve Loop(loop[t]) = {c5:c8};
+      t += 1;
+
+      Return
+
+
+// Add parameters
+Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
+R = DefineNumber[ 0.05, Name "Parameters/R" ];
+
+// create a Disk
+x0 = 0; y0 = 0;
+Call CHole;
+
+// create square with a hole
+Plane Surface(1) = {1, -loop[]};
+```
+
+---
+layout: two-cols
+level: 3
+---
+
+# Cube with Holes
+
+* for loop to create the **holes**
+
+
+::right::
+
+```gmsh {maxHeight:'100px'}
+Include "square.geo";
+
+// create a Disk
+Macro CHole
+      O=newp; Point(O) = {x0,y0,0,Lc};
+
+      p5=newp; Point(p5) = { x0+R,  y0,  0, Lc_h};
+      p6=newp; Point(p6) = { x0,  y0+R, 0, Lc_h};
+      p7=newp; Point(p7) = { x0-R, y0,  0, Lc_h};
+      p8=newp; Point(p8) = { x0, y0-R,  0, Lc_h};
+
+      c5=newl; Circle(c5) = {p5,O,p6};
+      c6=newl; Circle(c6) = {p6,O,p7};
+      c7=newl; Circle(c7) = {p7,O,p8};
+      c8=newl; Circle(c8) = {p8,O,p5};
+
+      loop[t] = newl;
+      Curve Loop(loop[t]) = {c5:c8};
+      t += 1;
+
+      Return
+
+
+// Add parameters
+Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
+R = DefineNumber[ 0.05, Name "Parameters/R" ];
+
+// create holes
+xt= 0;
+loop [] = {};
+For i In {1:Nx}
+    x0 = -Lx + i * 2*Lx/(Nx+1);
+    For j In {1:Ny}
+    	y0 = -Ly + j * 2*Ly/(Ny+1);
+	Call CHole;
+    EndFor
+EndFor
+
+// create square with a hole
+Plane Surface(1) = {1, -loop[]};
+```
+
+---
+level: 2
+---
+
+# OCC Geometry kernel
+
+<iframe width="960" height="569" src="https://www.youtube.com/embed/dywdlaaE1U8" title="Constructive solid geometry in Gmsh 3.0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+---
+layout: image-right
+image: https://cover.sli.dev
+level: 3
+---
+
+# Cube with holes
+
+* rewrite cube with holes
 
 
 ---
@@ -139,6 +381,13 @@ image: https://cover.sli.dev
 
 [Documentation](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-application-programming-interface) ·   [Tutorials](https://gitlab.onelab.info/gmsh/gmsh/-/tree/gmsh_4_13_1/tutorials/python) ·  [Examples](https://gitlab.onelab.info/gmsh/gmsh/-/tree/gmsh_4_13_1/examples/api)
 
+---
+
+# Python API
+
+* start gmsh
+* cube example
+* exercise
 
 ---
 layout: center
