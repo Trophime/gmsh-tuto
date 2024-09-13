@@ -41,7 +41,12 @@
 				"ms-toolsai.jupyter",
 				"Bertrand-Thierry.vscode-gmsh",
 				"vscode-icons-team.vscode-icons",
-				"antfu.slidev"
+				"antfu.slidev",
+				"bierner.emojisense",
+				"adamvoss.vscode-languagetool-en",
+				"adamvoss.vscode-languagetool-fr",
+				"adamvoss.vscode-languagetool",
+				"Nuxt.mdc"
 			]
 		}
 	}

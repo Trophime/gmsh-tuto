@@ -27,12 +27,12 @@ RUN apt-get update \
 
 # Configure apt and install packages for dev
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends apt-utils apt-file dialog 2>&1 \
+    && apt-get -y install --no-install-recommends apt-utils apt-file dialog file 2>&1 \
     && apt-file update \
     # \
     # Verify git, process tools, lsb-release (useful for CLI installs) installed\
     && apt-get -y install git git-lfs debian-keyring lsb-release wget curl sudo \
-    && apt-get -y install emacs-nox vim-nox  \
+    && apt-get -y install emacs-nox vim-nox \
     && apt-get -y install mesa-utils \
     #\
     # Install C++ tools\
