@@ -101,24 +101,48 @@ Here is another comment.
 # Installation
 
 * System Package
+
+```bash
+sudo apt update
+sudo apt install gmsh libgmsh-dev python3-gmsh [libgmsh-dev libfltk1.3-dev] 
+```
+
 * Python env
+
+```bash
+python3 -m venv --system-site-packages gmsh-env
+source ./gmsh-env/bin/activate
+python3 -m pip install gmsh
+```
+
 * Container
   * Docker
+
+```bash
+docker pull trophime/gmsh:4.13
+```
+
   * Singularity
+```bash
+singularity pull gmsh-4.13.sif
+```
 
 For this tutorial, we recommend to use the python virtual environment.
 
 
 ---
-layout: image-right
-image: https://cover.sli.dev
+layout: two-cols
 ---
 # GUI
 
 * Main Options
 * Custom Options
 
+::right::
+
+
 ---
+layout: two-cols
 level: 2
 ---
 
@@ -129,17 +153,19 @@ level: 2
 <Youtube id="nkuawZkiu1w" scale="0.7" />
 -->
 
-<iframe width="960" height="569" src="https://www.youtube.com/embed/nkuawZkiu1w" title="Creating a simple geometry with Gmsh" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+Workflow:
 
+* create Points,
+* create Lines,
+* define Curve Loops (aka surface boundaries)
+* create surfaces
+* define Surface Loops (aka volume boundaries)
+* create volume
+* create Physicals
 
----
+::right::
+<Youtube id="nkuawZkiu1w" />
 
-* example with a cube
-* save geo
-* replay/reload geo
-* add params
-
-* use TUI mode
 
 ---
 layout: two-cols
@@ -148,11 +174,38 @@ level: 3
 
 # Cube with Hole
 
-* start from a **square**
+* Start from a **square**
+  * Select **Built-In kernel** ,
+  * Create **Points**,
+  * Create **Lines**,
+  * Define **Curve Loop**
+  * Create **Surface**
+* View geometrical entities
+* Save the geometry as geo file
 
 ::right::
 
-```gmsh {maxHeight:'100px'}
+
+
+---
+layout: two-cols
+level: 3
+hideInToc: true
+---
+
+# Cube with Hole
+
+* Edit geo file content
+* Add params
+* Use TUI mode
+
+```bash
+gmsh [-2] square.geo
+```
+
+::right::
+
+```gmsh {-|1|3-4|8-11|13-16|18-19|20-22|all}
 SetFactory("Built-in");
 
 Lc = DefineNumber[ 0.1, Name "Parameters/Lc" ];
@@ -164,7 +217,6 @@ Point(1) = {-Lx, -Ly, 0, Lc};
 Point(2) = {Lx, -Ly, 0, Lc};
 Point(3) = {Lx, Ly, 0, Lc};
 Point(4) = {-Lx, Ly, 0, Lc};
-
 
 Line(1) = {1, 2};
 Line(2) = {2, 3};
@@ -181,21 +233,24 @@ Physical Curve("Ox") = {1};
 ---
 layout: two-cols
 level: 3
+hideInToc: true
 ---
 
 # Cube with Hole
 
-* start from a **square**
-* extrude the **square** 
+* Start from a **square**
+* Extrude the **square** 
 
 * Extrude command returns a list: 
-  * the "top" of the extruded surface (in out[0]), 
-  * the newly created volume (in out[1]) 
-  * the ids of the lateral surfaces (in out[2], out[3], ...)
+  * the "top" of the extruded surface (in out\[0\]), 
+  * the newly created volume (in out\[1\]) 
+  * the ids of the lateral surfaces (in out\[2\], ...)
+
+Your turn...
 
 ::right::
 
-```gmsh {maxHeight:'100px'}
+```gmsh {1|5|11-14}
 Include "square.geo";
 
 // extrude
@@ -208,25 +263,46 @@ For i In {0 : #out[]-1}
 EndFor
 
 Physical Surface("Bottom") = {out[0]};
-Physical Surface("Other") = {out[2], out[3], out[4], out[5]};
+Physical Surface("Other") = {out[2:5]};
 Physical Volume("Cube") = {out[1]};
 ```
 
 ---
 layout: two-cols
 level: 3
+hideInToc: true
+---
+
+# An error occured
+ 
+What to do?
+
+* Display message
+* Edit script
+* Reload script
+
+::right::
+
+
+
+---
+layout: two-cols
+level: 3
+hideInToc: true
 ---
 
 # Cube with Hole
 
 * start from a **square**
-* define **hole**
+* define a circular **hole**
+  * radius
+  * Lc_h
 
 Note the sign of the Curve Loop defining the surface
 
 ::right::
 
-```gmsh {maxHeight:'100px'}
+```gmsh {4-22, maxHeight:'100px'}
 Include "square.geo";
 
 // Add parameters
@@ -253,6 +329,7 @@ Plane Surface(1) = {1, -2};
 ---
 layout: two-cols
 level: 3
+hideInToc: true
 ---
 
 # Cube with Hole
@@ -261,9 +338,7 @@ level: 3
 
 ::right::
 
-```gmsh {maxHeight:'100px'}
-Include "square.geo";
-
+```gmsh
 // create a Disk
 Macro CHole
       O=newp; Point(O) = {x0,y0,0,Lc};
@@ -283,7 +358,24 @@ Macro CHole
       t += 1;
 
       Return
+```
 
+
+---
+layout: two-cols
+level: 3
+hideInToc: true
+---
+
+# Cube with Hole
+
+* create a macro for **hole**
+* call the macro
+
+::right::
+
+```gmsh {9}
+...
 
 // Add parameters
 Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
@@ -294,7 +386,7 @@ x0 = 0; y0 = 0;
 Call CHole;
 
 // create square with a hole
-Plane Surface(1) = {1, -loop[]};
+Plane Surface(2) = {1, -loop[]};
 ```
 
 ---
@@ -306,39 +398,20 @@ level: 3
 
 * for loop to create the **holes**
 
-
 ::right::
 
-```gmsh {maxHeight:'100px'}
+```gmsh {13-21}
 Include "square.geo";
 
 // create a Disk
 Macro CHole
-      O=newp; Point(O) = {x0,y0,0,Lc};
-
-      p5=newp; Point(p5) = { x0+R,  y0,  0, Lc_h};
-      p6=newp; Point(p6) = { x0,  y0+R, 0, Lc_h};
-      p7=newp; Point(p7) = { x0-R, y0,  0, Lc_h};
-      p8=newp; Point(p8) = { x0, y0-R,  0, Lc_h};
-
-      c5=newl; Circle(c5) = {p5,O,p6};
-      c6=newl; Circle(c6) = {p6,O,p7};
-      c7=newl; Circle(c7) = {p7,O,p8};
-      c8=newl; Circle(c8) = {p8,O,p5};
-
-      loop[t] = newl;
-      Curve Loop(loop[t]) = {c5:c8};
-      t += 1;
-
-      Return
-
+      ...
 
 // Add parameters
 Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
 R = DefineNumber[ 0.05, Name "Parameters/R" ];
 
 // create holes
-xt= 0;
 loop [] = {};
 For i In {1:Nx}
     x0 = -Lx + i * 2*Lx/(Nx+1);
@@ -353,24 +426,116 @@ Plane Surface(1) = {1, -loop[]};
 ```
 
 ---
+layout: two-cols
 level: 2
 ---
 
 # OCC Geometry kernel
 
+workflow:
+* Create base objects
+* Perform boolean operations
+* Get id for geom entities
+
+::right::
+
+<Youtube id="dywdlaaE1U8" />
+
+<!--
 <iframe width="960" height="569" src="https://www.youtube.com/embed/dywdlaaE1U8" title="Constructive solid geometry in Gmsh 3.0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+-->
+
+---
+layout: two-cols
+level: 3
+---
+
+# Cube with hole
+
+* Select Occ kernel
+* Create a cube
+* Create a cylinder
+  * center of the first circular face
+  * the vector defining its axis
+  * its radius
+  * eventualy, the angular opening
+* Move the cylinder
+* Perform the boolean op
+
+::right::
+
+```gmsh
+Box ( expression ) = { x0, y0, z0, Lx, Ly, Lz };
+```
+
+```gmsh
+Cylinder ( expression ) = { cx, cy, cz, nx, ny, nz, r };
+```
+
+Translate all elementary entities in transform-list.
+
+```gmsh
+Translate { dx, dy, dz } { transform-list }
+```
+
+Subtract the tool from the object. 
+
+```
+BooleanDifference { boolean-list } { boolean-list }
+```
+
+---
+layout: two-cols
+level: 3
+hideInToc: true
+---
+
+# Cube with hole
+
+* Rewrite cube with hole
+  * Create a cube
+  * Create a cylinder
+    * center of the first circular face
+    * the vector defining its axis
+    * its radius
+    * eventualy, the angular opening
+  * Move the cylinder
+  * Perform the boolean op
+
+::right::
+
+```gmsh
+SetFactory("OpenCASCADE");
+Box(1) = {-0.5,-0.5,-0.5, 1,1, 1};
+Cylinder(2) = {0,0,0, 0,0,2, 0.25};
+
+Translate {0, 0., -1} { Volume {2}; }
+BooleanDifference { Volume {1}; } { Volume {2}; }
+
+Recursive Delete { Volume {1, 2}; }
+```
 
 
 ---
-layout: image-right
-image: https://cover.sli.dev
+layout: two-cols
+level: 3
 level: 3
 ---
 
 # Cube with holes
 
-* rewrite cube with holes
+* Your turn: 
+  * Rewrite cube with holes
+  * Use
+    * Parameters
+    * Macro for Holes
 
+
+::right::
+
+```gmsh
+...
+```
 
 ---
 
@@ -382,12 +547,93 @@ level: 3
 [Documentation](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-application-programming-interface) ·   [Tutorials](https://gitlab.onelab.info/gmsh/gmsh/-/tree/gmsh_4_13_1/tutorials/python) ·  [Examples](https://gitlab.onelab.info/gmsh/gmsh/-/tree/gmsh_4_13_1/examples/api)
 
 ---
-
+layout: two-cols
+level: 2
+---
 # Python API
 
 * start gmsh
 * cube example
-* exercise
+* exercises
+
+::right::
+
+```python
+import gmsh
+import sys
+
+gmsh.initialize()
+
+if '-nopopup' not in sys.argv:
+    gmsh.fltk.run()
+```
+
+```python
+gmsh.model.add("square")
+
+Lc = 1e-1
+Lx = Ly = 1
+
+# define points
+p1 = gmsh.model.geo.addPoint(-Lx, -Ly, 0, Lc)
+...
+
+# create lines
+gmsh.model.geo.addLine(p1, p2, 1)
+...
+
+# create surface
+gmsh.model.geo.addCurveLoop([1, 2, 3, 4], 1)
+gmsh.model.geo.addPlaneSurface([1], 1)
+
+# Force synchro
+gmsh.model.geo.synchronize()
+```
+
+---
+layout: two-cols
+level: 2
+---
+# C++ API
+
+For the brave:
+
+* start gmsh
+* cube example
+
+To compile the examples:
+
+```bash
+g++ -c test.cpp -I/usr/include/gmsh
+g++ test.o -lgmsh -o test.exe
+```
+
+::right::
+
+```cpp
+#include <set>
+#include <gmsh.h>
+int main(int argc, char **argv)
+{
+  gmsh::initialize();
+
+  gmsh::model::add("square");
+  gmsh::model::geo::addPoint(.1, 0, 0, lc, 2);
+  
+  roundedRadius = 0;
+  tag = -1;
+  gmsh::model::geo::addRectangle(-0.5, -0.5, -0.5, 1, 1, tag, roundedRadius);
+
+  gmsh::model::geo::synchronize();
+  gmsh::model::addPhysicalGroup(2, {1}, -1, "My surface");
+
+  std::set<std::string> args(argv, argv + argc);
+  if(!args.count("-nopopup")) gmsh::fltk::run();
+  
+  gmsh::finalize();
+  return 0;
+}
+```
 
 ---
 layout: center
