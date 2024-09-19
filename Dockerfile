@@ -3,7 +3,7 @@
 ARG BASE=trophime/opengl:1.7.0-glvnd-runtime-ubuntu24.04
 
 FROM ${BASE}
-LABEL maintainer Christophe Trophime <christophe.trophime@lncmi.cnrs.fr>
+LABEL maintainer=Christophe Trophime <christophe.trophime@lncmi.cnrs.fr>
 
 USER root
 
@@ -27,12 +27,12 @@ RUN apt-get update \
 
 # Configure apt and install packages for dev
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends apt-utils apt-file dialog 2>&1 \
+    && apt-get -y install --no-install-recommends apt-utils apt-file dialog file 2>&1 \
     && apt-file update \
     # \
     # Verify git, process tools, lsb-release (useful for CLI installs) installed\
     && apt-get -y install git git-lfs debian-keyring lsb-release wget curl sudo \
-    && apt-get -y install emacs-nox vim-nox  \
+    && apt-get -y install emacs-nox vim-nox \
     && apt-get -y install mesa-utils \
     #\
     # Install C++ tools\
@@ -40,11 +40,12 @@ RUN apt-get update \
     && apt-get -y install g++ \ 
     #\
     # Install python tools\
-    && apt-get -y install python3-minimal libpython3-dev python3-env swig \
-    && apt-get -y install python-is-python3 python3-pip python3-jinja2 \
+    && apt-get -y install python3-minimal libpython3-dev swig \
+    && apt-get -y install python-is-python3 python3-venv python3-jinja2 \
     && apt-get -y install python3-autopep8 black yapf3 python3-bandit flake8 pydocstyle pylint python3-pytest mypy \
     # Install needed for gmsh \
-    && apt install libglu1-mesa libxcursor1 libxinerama1
+    # Install gmsh required packages \
+    && apt-get -y install libglu1-mesa libxcursor1 libxinerama1
 
 
 # Eventually add USERNAME to VGLUSERS group (to be created if not present)
