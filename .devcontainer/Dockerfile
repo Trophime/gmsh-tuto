@@ -62,15 +62,45 @@ RUN mkdir -p ~${USERNAME}/.ssh/ \
     && ssh-keyscan github.com >> ~${USERNAME}/.ssh/known_hosts \
     && chown -R ${USERNAME}.$USER_GID ~${USERNAME}/.ssh
 
+# add motd see https://gist.github.com/ashgillman/a6aa7a5afc9e146a65fb
+RUN apt install tini \
+    && echo '[ ! -z "$TERM" -a -r /etc/motd ] && cat /etc/issue && cat /etc/motd' \
+    >> /etc/bash.bashrc \
+    ; echo "\
+===================================================================\n\
+= Gmsh Docker container                                        =\n\
+===================================================================\n\
+\n\
+* To start the virtual env and run Gmsh:\n\
+source $HOME/gmsh-env/bin/activate\n\
+gmsh\n\
+\n\
+* To quit the virtual env:\n\
+deactivate\n"\
+    > /etc/motd
+
+# Switch to USERNAME
+USER ${USERNAME}
+
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
+
+COPY start-venv.sh /home/${USERNAME}
+RUN /home/${USERNAME}/start-venv.sh
+
+WORKDIR /home/${USERNAME}
+ENTRYPOINT ["tini", "--"]
+CMD ["bash"]
+
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
 # Switch to USERNAME
 USER ${USERNAME}
-ENV PATH=$HOME/.local/bin:$PATH
 COPY start-venv.sh /home/${USERNAME}
 RUN /home/${USERNAME}/start-venv.sh
 
+
 WORKDIR /home/${USERNAME}
-CMD [ "source", "/home/${USERNAME}/gmsh-env/bin/activate" ]
-# ENTRYPOINT [ "start-venv.sh" ]
+ENTRYPOINT ["tini", "--"]
+CMD ["bash"]

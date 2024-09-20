@@ -1,0 +1,83 @@
+Bootstrap: docker
+From: ubuntu:24.04
+
+%runscript
+    if [ $# -ne 2 ]; then
+        echo "Please provide an input and an output file."
+        exit 1
+    fi
+    cat $?
+    . /home/gmsh-env/bin/activate 
+    gmsh --version
+
+
+%environment
+export OMP_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export LANG=C
+
+%labels
+AUTHOR christophe.trophime@lncmi.cnrs.fr
+Maintainer: Christophe Trophime
+Maintainer_email: christophe.trophime@lncmi.cnrs.fr
+Version 1.0
+        
+%post
+
+# # Specific settings for CESGA FT2
+# mkdir -p /feel
+# mkdir -p /scratch /tmp /home /opt/cesga /mnt
+# mkdir -p /opt/DISTENE/DLim /feel
+
+# To prevent interactive settings of tzdata
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update
+apt-get -y upgrade
+apt-get -y install python-is-python3 python3-venv
+apt-get -y install mesa-utils libglu1-mesa libxcursor1 libxinerama1 libxft2 libgomp1
+apt-get clean
+
+python -m venv --system-site-packages /home/gmsh-env
+. /home/gmsh-env/bin/activate && \
+python -m pip install gmsh
+
+# create custom motd
+# Install figlet!
+apt install -y figlet
+
+VERSION=$(gmsh --version | tail -1 | cut -d ":" -f2)
+deactivate
+
+cat > /.singularity.d/env/99-motd.sh <<EOF   
+case \$0 in
+    /.singularity.d/actions/shell)
+        figlet Gmsh
+        echo
+        echo "Gmsh ${VERSION}"
+        echo
+        echo "Hello \$USER from shell"
+        echo "To run gmsh, first launch the virtual env gmsh-env with"
+        echo "source /home/gmsh-env/bin/activate" 
+        echo "To quit the virtual env use: deactivate";;
+esac
+EOF
+
+
+# %test
+# # Section that should be updated with ctest.
+# feelpp_qs_laplacian_2d --config-file /usr/share/feelpp/data/testcases/quickstart/laplacian/feelpp2d/feelpp2d.cfg
+# # --checker.tolerance.exact=5.e-14
+
+# %apprun qs_laplacian_2d
+# APP1=feelpp_qs_laplacian_2d
+# DATADIR=/usr/share/feelpp/data/testcases/quickstart/laplacian/feelpp2d
+
+# export FEELPP_REPOSITORY=${HOME}/feel/singularity
+# mkdir -p ${FEELPP_REPOSITORY}
+# if [ ! -z "${APP1}" ]; then
+#    echo "Running Feelpp quickstart demonstration 'qs_lapacian_2d'"
+#    ${APP1} --config-file=$DATADIR/feelpp2d.cfg #--checker.tolerance.exact=5.e-14 "$@"
+# else
+#    echo "No demo available for this image!"
+# fi

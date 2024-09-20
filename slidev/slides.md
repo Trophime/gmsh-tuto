@@ -90,6 +90,8 @@ Here is another comment.
 -->
 
 ---
+hideInToc: true
+---
 
 # Table of contents
 
@@ -119,12 +121,14 @@ python3 -m pip install gmsh
   * Docker
 
 ```bash
-docker pull trophime/gmsh:4.13
+xhost +local:root
+docker run -it --rm  --name gmsh -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix trophime/gmsh:4.13.1
 ```
 
   * Singularity
 ```bash
 singularity pull gmsh-4.13.sif
+singularity shell --nv gmsh-4.13.sif
 ```
 
 For this tutorial, we recommend to use the python virtual environment.
@@ -436,6 +440,7 @@ workflow:
 * Create base objects
 * Perform boolean operations
 * Get id for geom entities
+* Save to CAD format
 
 ::right::
 
@@ -519,7 +524,7 @@ Recursive Delete { Volume {1, 2}; }
 ---
 layout: two-cols
 level: 3
-level: 3
+hideInToc: true
 ---
 
 # Cube with holes
@@ -530,12 +535,47 @@ level: 3
     * Parameters
     * Macro for Holes
 
+<img src="/img/cube-trous.png" />
 
 ::right::
 
 ```gmsh
 ...
 ```
+
+---
+level: 3
+layout: image-right
+image: /img/t13_data.png
+backgroundSize: 90% 60%
+hideInToc: true
+---
+
+# Load CAD geometry
+
+* from command line
+
+```bash
+gmsh file.stp
+```
+
+* from geo file
+
+```gmsh
+Merge "file.stp";
+```
+
+* Save CAD geometry
+  * only when using OCC kernel
+
+```gmsh
+Save "file.brep";
+```
+
+!!!STL format can be loaded but not converted to other CAD format!!!
+
+<Comp src="/img/t13_data.png" width=80 />
+
 
 ---
 
@@ -554,7 +594,6 @@ level: 2
 
 * start gmsh
 * cube example
-* exercises
 
 ::right::
 
@@ -592,23 +631,36 @@ gmsh.model.geo.synchronize()
 
 ---
 layout: two-cols
-level: 2
+level: 3
+hideInToc: true
 ---
-# C++ API
 
-For the brave:
+# Cube with holes
 
-* start gmsh
-* cube example
+* rewrite using OCC api
 
-To compile the examples:
+---
+layout: two-cols
+level: 3
+hideInToc: true
+---
 
-```bash
-g++ -c test.cpp -I/usr/include/gmsh
-g++ test.o -lgmsh -o test.exe
-```
+# A thermal fin
+
+* use of fragment boolean operation
+* how to get geometric entities ?
+* how to run feelp ?
 
 ::right::
+
+
+---
+layout: two-cols
+level: 2
+---
+# C++ API (For the brave)
+
+* cube example with OCC kernel
 
 ```cpp
 #include <set>
@@ -634,6 +686,64 @@ int main(int argc, char **argv)
   return 0;
 }
 ```
+
+::right::
+
+---
+hideInToc: true
+---
+
+# To compile the examples
+
+```bash
+g++ -c test.cpp -I/usr/include/gmsh
+g++ test.o -lgmsh -o test.exe
+```
+
+---
+layout: two-cols
+---
+
+# Meshing
+
+* Structured Mesh
+* Unstructed Mesh
+
+* Mesh from command line
+* Convert Mesh
+
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Structured Mesh
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# UnStructured Mesh
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Quad Mesh
+
+---
+layout: two-cols
+---
+
+# Adapt Mesh
+
+---
+layout: two-cols
+---
+# Moving Mesh
 
 ---
 layout: center
