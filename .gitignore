@@ -111,7 +111,7 @@ ENV/
 *~
 
 # data folder
-data
+#data
 
 log*
 
