@@ -3,7 +3,7 @@
 ARG BASE=trophime/opengl:1.7.0-glvnd-runtime-ubuntu24.04
 
 FROM ${BASE}
-LABEL maintainer=Christophe Trophime <christophe.trophime@lncmi.cnrs.fr>
+LABEL maintainer="Christophe Trophime <christophe.trophime@lncmi.cnrs.fr>"
 
 USER root
 
@@ -60,6 +60,23 @@ RUN mkdir -p ~${USERNAME}/.ssh/ \
     && ssh-keyscan github.com >> ~${USERNAME}/.ssh/known_hosts \
     && chown -R ${USERNAME}.$USER_GID ~${USERNAME}/.ssh
 
+# add motd see https://gist.github.com/ashgillman/a6aa7a5afc9e146a65fb
+RUN apt install tini \
+    && echo '[ ! -z "$TERM" -a -r /etc/motd ] && cat /etc/issue && cat /etc/motd' \
+    >> /etc/bash.bashrc \
+    ; echo "\
+===================================================================\n\
+= Gmsh Docker container                                        =\n\
+===================================================================\n\
+\n\
+* To start the virtual env and run Gmsh:\n\
+source $HOME/gmsh-env/bin/activate\n\
+gmsh\n\
+\n\
+* To quit the virtual env:\n\
+deactivate\n"\
+    > /etc/motd
+
 # Switch to USERNAME
 USER ${USERNAME}
 
@@ -70,4 +87,5 @@ COPY start-venv.sh /home/${USERNAME}
 RUN /home/${USERNAME}/start-venv.sh
 
 WORKDIR /home/${USERNAME}
-CMD [ "source", "/home/${USERNAME}/gmsh-env/bin/activate" ]
+ENTRYPOINT ["tini", "--"]
+CMD ["bash"]
