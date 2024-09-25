@@ -46,6 +46,7 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 ---
 transition: fade-out
+hideInToc: true
 ---
 
 # What is Gmsh?
@@ -444,7 +445,7 @@ workflow:
 
 ::right::
 
-<Youtube id="dywdlaaE1U8" />
+<Youtube id="dywdlaaE1U8" width="960" height="569" />
 
 <!--
 <iframe width="960" height="569" src="https://www.youtube.com/embed/dywdlaaE1U8" title="Constructive solid geometry in Gmsh 3.0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
