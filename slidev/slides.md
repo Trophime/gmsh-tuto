@@ -654,6 +654,17 @@ hideInToc: true
 
 ::right::
 
+---
+layout: two-cols
+level: 3
+hideInToc: true
+---
+
+# Usefull snippets
+
+* Explore (explorer.py)
+
+
 
 ---
 layout: two-cols
@@ -711,7 +722,16 @@ layout: two-cols
 * Unstructed Mesh
 
 * Mesh from command line
+
+```bash
+gmsh [-1|-2|-3] file.geo [-bin] [-o file.msh]
+```
+
 * Convert Mesh
+
+```bash
+gmsh -0 mesh_in.med [-bin] -o mesh_out.msh
+```
 
 ---
 layout: two-cols
@@ -727,6 +747,11 @@ hideInToc: true
 ---
 
 # UnStructured Mesh
+
+* Use Transfinite
+* from 2D struct mesh, Elevation / Extrusion
+
+
 ---
 layout: two-cols
 level: 2
@@ -734,6 +759,23 @@ hideInToc: true
 ---
 
 # Quad Mesh
+
+* recombine
+
+---
+layout: two-cols
+---
+
+# Mesh for HPC context
+
+* partitionning
+
+---
+layout: two-cols
+---
+
+# Mesh using Gmsh API
+
 
 ---
 layout: two-cols
