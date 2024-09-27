@@ -235,7 +235,7 @@ Workflow:
 * create Physicals
 
 ::right::
-<Youtube id="nkuawZkiu1w" />
+<Youtube id="nkuawZkiu1w" widt="320" height="190" />
 
 
 ---
@@ -255,7 +255,7 @@ level: 3
 * Save the geometry as geo file
 
 ::right::
-
+<img src="/img/gmsh-gui-cube.png">
 
 
 ---
@@ -273,6 +273,7 @@ hideInToc: true
 ```bash
 gmsh [-2] square.geo
 ```
+<img src="/img/gmsh-square-params.png">
 
 ::right::
 
@@ -375,6 +376,7 @@ hideInToc: true
 Note the sign of the Curve Loop defining the surface
 
 ::right::
+<img src="/img/gmsh-trou-params.png">
 
 ```gmsh {4-22, maxHeight:'100px'}
 Include "square.geo";
@@ -447,6 +449,7 @@ hideInToc: true
 * call the macro
 
 ::right::
+<img src="/img/gmsh-trou-params.png">
 
 ```gmsh {9}
 ...
@@ -471,6 +474,7 @@ level: 3
 # Cube with Holes
 
 * for loop to create the **holes**
+<img src="/img/gmsh-trous-params.png">
 
 ::right::
 
@@ -514,11 +518,8 @@ workflow:
 
 ::right::
 
-<Youtube id="dywdlaaE1U8" width="960" height="569" />
+<Youtube id="dywdlaaE1U8" width="320" height="190" />
 
-<!--
-<iframe width="960" height="569" src="https://www.youtube.com/embed/dywdlaaE1U8" title="Constructive solid geometry in Gmsh 3.0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
--->
 
 ---
 layout: two-cols
@@ -633,6 +634,7 @@ gmsh file.stp
 
 ```gmsh
 Merge "file.stp";
+v() = ShapeFromFile("file.stp");
 ```
 
 * Save CAD geometry
@@ -645,6 +647,21 @@ Save "file.brep";
 !!!STL format can be loaded but not converted to other CAD format!!!
 
 <Comp src="/img/t13_data.png" width=80 />
+
+---
+layout: two-cols
+level: 3
+hideInToc: true
+---
+
+# Exercises
+
+* Rewrite using OCC Kernel:
+  * TureKHron benchmark geometry: 
+  * Helix geometry:
+    ** create a cylinder
+    ** create an helix (see [t9.geo](https://gmsh.info/doc/texinfo/gmsh.html#t19))]
+    ** perform boolean operation
 
 
 ---
@@ -729,10 +746,34 @@ level: 3
 hideInToc: true
 ---
 
-# Usefull snippets
+# Usefull commands / snippets
 
-* Explore (explorer.py)
+* Get more info on entities
 
+```python
+entities = gmsh.model.getEntities()
+for e in entities:
+    print("Entity " + str(e) + " of type " + gmsh.model.getType(e[0], e[1]))
+```
+
+* Get ids of child entities after a boolean operation
+
+```python
+ov, ovv = gmsh.model.occ.fragment([(2, A_id)], [(2, j) for j in flat_list])
+
+print("fragment produced surfaces:")
+for e in ov:
+    print(e)ov, ovv = gmsh.model.occ.fragment([(2, A_id)], [(2, j) for j in flat_list])
+
+# ovv contains the parent-child relationships for all the input entities:
+print("before/after fragment relations:")
+for e in zip([(2, A_id)] + [(2, j) for j in flat_list], ovv):
+    print("parent " + str(e[0]) + " -> child " + str(e[1]))    
+```
+
+* For BC detection
+  * gmsh/model/getBoundary
+  * gmsh/model/getEntitiesInBoundingBox
 
 
 ---
@@ -827,6 +868,89 @@ hideInToc: true
 ---
 
 # Structured Mesh
+
+⚠️ geometry must consist of "Quad/Hexa" patches ⚠️
+
+* Use **Transfinite**
+
+```gmsh
+Include "square.geo";
+Transfinite Surface { 1:4 };
+```
+
+To get quad mesh, add:
+
+```gmsh
+Recombine Surface{1};
+```
+* see [t6.geo](https://gmsh.info/doc/texinfo/gmsh.html#t6)
+
+::right::
+<img src="img/gmsh-transfinite-surface.png" />
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Structured Mesh
+
+⚠️ geometry must consist of "Quad/Hexa" patches ⚠️
+
+* Use **Transfinite**
+
+```gmsh
+Include "square.geo";
+
+Transfinite Curve{1} = 20 Using Bump 0.2;
+Transfinite Curve{2} = 20 Using Bump 0.2;
+Transfinite Curve{3} = 20 Using Bump 0.2;
+Transfinite Curve{4} = 20 Using Bump 0.2;
+
+Transfinite Surface{1:4};
+```
+
+::right::
+<img src="gmsh-square-transfiniteline.png" />
+
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Structured Mesh
+
+⚠️ geometry must consist of "Quad/Hexa" patches ⚠️
+
+* from 2D struct mesh, Elevation / Extrusion:
+
+  ** 2 layers
+  *** 1 layer: 8 subsections, with a height of 0.25*Lz
+  *** 2 layer: 2 subsections, with a height of 0.75*Lz
+
+```gmsh
+Merge "square.geo";
+Lz =1;
+out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} };}
+Physical Volume("cube") = {out[0]};
+```
+
+* add **Recombine** to get an hex mesh:
+
+```gmsh
+Merge "square-transfinite-line.geo";
+Lz =1;
+out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} }; Recombine;}
+Physical Volume("cube") = {out[0]};
+```
+* see [t3.geo](https://gmsh.info/doc/texinfo/gmsh.html#t3)
+
+::right::
+<img src="gmsh-cube-hexa.png" />
+
+
+
 ---
 layout: two-cols
 level: 2
@@ -835,25 +959,18 @@ hideInToc: true
 
 # UnStructured Mesh
 
-* Use Transfinite
-* from 2D struct mesh, Elevation / Extrusion
-
-
----
-layout: two-cols
-level: 2
-hideInToc: true
----
-
-# Quad Mesh
-
-* recombine
+* load geo file
+* select algorithm
+* Mesh:
+  ** type `F2` for 2D
+  ** type `F3` for 3D
+* Export Mesh
 
 ---
 layout: two-cols
 ---
 
-# Mesh for HPC context
+# Mesh in HPC context
 
 * partitionning
 
