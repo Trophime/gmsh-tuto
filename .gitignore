@@ -133,3 +133,7 @@ ghtoken
 # singularity
 *.sif
 
+*.pdf
+*.pptx
+*.codegroup
+
