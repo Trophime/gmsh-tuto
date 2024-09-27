@@ -47,7 +47,9 @@ RUN apt-get update \
     && apt-get -y install nodejs npm \
     # Install needed for gmsh \
     # Install gmsh required packages \
-    && apt-get -y install libglu1-mesa libxcursor1 libxinerama1
+    && apt-get -y install libglu1-mesa libxcursor1 libxinerama1 \
+    # Install playwright \
+    && apt-get -y install libnss3 libnspr4
 
 
 # Eventually add USERNAME to VGLUSERS group (to be created if not present)
