@@ -141,57 +141,72 @@ layout: two-cols
 # GUI
 
 * ⚙️ Main Options
-* Custom Options
+  * **General**  (Tools/Options, General tab)
 
 ::right::
 <img src="/img/gmsh-general.png" />
 ---
 layout: two-cols
+hideInToc: true
 ---
 # GUI
 
-* ⚙️ Main Options
-* Custom Options
+* ⚙️ Main Options 
+  * General  (Tools/Options)
+  * **Geometry** (Tools/Options, Geometry tab)
 
 ::right::
 <img src="/img/gmsh-geometry.png" />
 ---
 layout: two-cols
+hideInToc: true
 ---
 # GUI
 
-* ⚙️ Main Options
-* Custom Options
+* ⚙️ Main Options 
+  * General  (Tools/Options)
+  * **Geometry**  (Tools/Options, Geometry tab)
 
 ::right::
 <img src="/img/gmsh-geometry-ids.png" />
 ---
 layout: two-cols
+hideInToc: true
 ---
 # GUI
 
-* ⚙️ Main Options
-* Custom Options
+* ⚙️ Main Options 
+  * General (Tools/Options)
+  * **Geometry** (Tools/Options, Geometry tab)
+  * Statistics (Tools/Statistics)
 
 ::right::
 <img src="/img/gmsh-mesh-options-stats.png" />
 ---
 layout: two-cols
+hideInToc: true
 ---
 # GUI
 
-* ⚙️ Main Options
-* Custom Options
+* ⚙️ Main Options 
+  * General  (Tools/Options)
+  * Geometry (Tools/Options)
+  * **Statistics** (Tools/Statistics)
+  * Visibility (Tools/Visibility) 
 
 ::right::
 <img src="/img/gmsh-mesh-visibility.png" />
 ---
 layout: two-cols
+hideInToc: true
 ---
 # GUI
 
 * ⚙️ Main Options
-* Custom Options
+  * General (Tools/Options) 
+  * Geometry (Tools/Options) 
+  * Statistics (Tools/Statistics)
+  * **Visibility** (Tools/Visibility)
 
 ::right::
 <img src="/img/gmsh-mesh-treeview.png" />
@@ -333,9 +348,11 @@ hideInToc: true
  
 What to do?
 
-* Display message
-* Edit script
-* Reload script
+* 🔍 Display message (Tools/Message Consome)
+* ✍️ Edit script (Left tree: Modules/Geometry)
+* ♻️ Reload script (Left tree: Modules/Geometry)
+
+* ⚠️ use clear button in Message Console
 
 ::right::
 
@@ -767,6 +784,24 @@ g++ test.o -lgmsh -o test.exe
 ---
 layout: two-cols
 ---
+
+# Meshing: GUI menu
+
+* ⚙️ Main options
+  * 🌲 **Left tree**
+  * 🔍 **Tools/Options/Mesh**
+  * 🔢 Tools/Statistics
+  * 👻 Tools/Visibility
+
+
+::right::
+
+<img src="/img/gmsh-mesh-gui.png" />
+
+---
+layout: two-cols
+---
+
 
 # Meshing
 
