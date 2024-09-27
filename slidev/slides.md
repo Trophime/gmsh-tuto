@@ -514,6 +514,13 @@ hideInToc: true
   * create from scratch
   * add params for dimension and lc
   * create a macro for solid part
+  * use **Translate** with **Duplicate**
+
+```gmsh
+Translate {0, 0.05, 0} { Duplicata{ Surface{1,2}; } }
+```
+
+see:  [t2.geo](https://gmsh.info/doc/texinfo/gmsh.html#t2)
 
 ::right::
 <img src="/img/TurekHronFSIGeometry.png" >
@@ -931,7 +938,7 @@ Transfinite Surface{1:4};
 ```
 
 ::right::
-<img src="gmsh-square-transfiniteline.png" />
+<img src="/img/gmsh-square-transfiniteline.png" />
 
 ---
 layout: two-cols
@@ -967,7 +974,7 @@ Physical Volume("cube") = {out[0]};
 * see [t3.geo](https://gmsh.info/doc/texinfo/gmsh.html#t3)
 
 ::right::
-<img src="gmsh-cube-hexa.png" />
+<img src="/img/gmsh-cube-hexa.png" />
 
 
 
