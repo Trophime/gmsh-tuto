@@ -804,11 +804,16 @@ hideInToc: true
 
 # A thermal fin
 
-* use of fragment boolean operation
-* how to get geometric entities ?
-* how to run feelp ?
+* use:
+  * **fragment** boolean operation
+  * "snippet" for defining markers
+* run feelp heat toolbox
 
 ::right::
+
+<img src="/img/fin.png" />
+thickness t = 0.25 and length L = 2.5
+
 
 ---
 layout: two-cols
