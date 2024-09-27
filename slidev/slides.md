@@ -140,10 +140,61 @@ layout: two-cols
 ---
 # GUI
 
-* Main Options
+* ⚙️ Main Options
 * Custom Options
 
 ::right::
+<img src="/img/gmsh-general.png" />
+---
+layout: two-cols
+---
+# GUI
+
+* ⚙️ Main Options
+* Custom Options
+
+::right::
+<img src="/img/gmsh-geometry.png" />
+---
+layout: two-cols
+---
+# GUI
+
+* ⚙️ Main Options
+* Custom Options
+
+::right::
+<img src="/img/gmsh-geometry-ids.png" />
+---
+layout: two-cols
+---
+# GUI
+
+* ⚙️ Main Options
+* Custom Options
+
+::right::
+<img src="/img/gmsh-mesh-options-stats.png" />
+---
+layout: two-cols
+---
+# GUI
+
+* ⚙️ Main Options
+* Custom Options
+
+::right::
+<img src="/img/gmsh-mesh-visibility.png" />
+---
+layout: two-cols
+---
+# GUI
+
+* ⚙️ Main Options
+* Custom Options
+
+::right::
+<img src="/img/gmsh-mesh-treeview.png" />
 
 
 ---
@@ -288,6 +339,7 @@ What to do?
 
 ::right::
 
+<img src="/img/gmsh-message.png" />
 
 
 ---
