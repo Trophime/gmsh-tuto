@@ -158,6 +158,7 @@ hideInToc: true
 ::right::
 <img src="/img/gmsh-geometry.png" />
 ---
+transition: fade-out
 layout: two-cols
 hideInToc: true
 ---
@@ -170,6 +171,7 @@ hideInToc: true
 ::right::
 <img src="/img/gmsh-geometry-ids.png" />
 ---
+transition: fade-out
 layout: two-cols
 hideInToc: true
 ---
@@ -183,6 +185,7 @@ hideInToc: true
 ::right::
 <img src="/img/gmsh-mesh-options-stats.png" />
 ---
+transition: fade-out
 layout: two-cols
 hideInToc: true
 ---
@@ -197,6 +200,7 @@ hideInToc: true
 ::right::
 <img src="/img/gmsh-mesh-visibility.png" />
 ---
+transition: fade-out
 layout: two-cols
 hideInToc: true
 ---
@@ -375,8 +379,9 @@ hideInToc: true
 
 Note the sign of the Curve Loop defining the surface
 
-::right::
 <img src="/img/gmsh-trou-params.png">
+
+::right::
 
 ```gmsh {4-22, maxHeight:'100px'}
 Include "square.geo";
@@ -448,8 +453,9 @@ hideInToc: true
 * create a macro for **hole**
 * call the macro
 
-::right::
 <img src="/img/gmsh-trou-params.png">
+
+::right::
 
 ```gmsh {9}
 ...
@@ -630,13 +636,10 @@ hideInToc: true
     * Parameters
     * Macro for Holes
 
-<img src="/img/cube-trous.png" />
-
 ::right::
 
-```gmsh
-...
-```
+<img src="/img/cube-trous.png" />
+
 
 ---
 level: 3
@@ -658,6 +661,9 @@ gmsh file.stp
 
 ```gmsh
 Merge "file.stp";
+```
+or
+```gmsh
 v() = ShapeFromFile("file.stp");
 ```
 
@@ -668,7 +674,7 @@ v() = ShapeFromFile("file.stp");
 Save "file.brep";
 ```
 
-!!!STL format can be loaded but not converted to other CAD format!!!
+⚠️ STL can not be converted to other format ⚠️
 
 <Comp src="/img/t13_data.png" width=80 />
 
@@ -683,14 +689,13 @@ hideInToc: true
 * Rewrite using OCC Kernel:
   * TureKHron benchmark geometry: 
   * Helix geometry:
-    ** create a cylinder
-    ** create an helix (see [t9.geo](https://gmsh.info/doc/texinfo/gmsh.html#t19))]
-    ** perform boolean operation
+    * Create a cylinder
+    * Create an helix (see [t9.geo](https://gmsh.info/doc/texinfo/gmsh.html#t19))
+    * Perform boolean operation
 
 ---
 layout: two-cols
 level: 2
----
 ---
 
 # API
@@ -707,9 +712,6 @@ level: 2
 # Python API
 
 * start gmsh
-* cube example
-
-::right::
 
 ```python
 import gmsh
@@ -720,6 +722,11 @@ gmsh.initialize()
 if '-nopopup' not in sys.argv:
     gmsh.fltk.run()
 ```
+
+
+::right::
+
+* cube example
 
 ```python
 gmsh.model.add("square")
@@ -751,24 +758,11 @@ hideInToc: true
 
 # Cube with holes
 
-* rewrite using OCC api
+* rewrite using OCC API
+* use `argparse` for setting arguments in command line 
+
 
 ---
-layout: two-cols
-level: 3
-hideInToc: true
----
-
-# A thermal fin
-
-* use of fragment boolean operation
-* how to get geometric entities ?
-* how to run feelp ?
-
-::right::
-
----
-layout: two-cols
 level: 3
 hideInToc: true
 ---
@@ -802,6 +796,19 @@ for e in zip([(2, A_id)] + [(2, j) for j in flat_list], ovv):
   * gmsh/model/getBoundary
   * gmsh/model/getEntitiesInBoundingBox
 
+---
+layout: two-cols
+level: 3
+hideInToc: true
+---
+
+# A thermal fin
+
+* use of fragment boolean operation
+* how to get geometric entities ?
+* how to run feelp ?
+
+::right::
 
 ---
 layout: two-cols
@@ -913,7 +920,7 @@ Recombine Surface{1};
 * see [t6.geo](https://gmsh.info/doc/texinfo/gmsh.html#t6)
 
 ::right::
-<img src="img/gmsh-transfinite-surface.png" />
+<img src="/img/gmsh-transfinite-surface.png" />
 ---
 layout: two-cols
 level: 2
