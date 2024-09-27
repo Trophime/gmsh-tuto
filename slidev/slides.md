@@ -502,6 +502,23 @@ EndFor
 // create square with a hole
 Plane Surface(1) = {1, -loop[]};
 ```
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Exercises
+
+* TureKHron benchmark geometry
+  * create from scratch
+  * add params for dimension and lc
+  * create a macro for solid part
+
+::right::
+<img src="/img/TurekHronFSIGeometry.png" >
+Sketch of the geometry
+
 
 ---
 layout: two-cols
@@ -663,7 +680,10 @@ hideInToc: true
     ** create an helix (see [t9.geo](https://gmsh.info/doc/texinfo/gmsh.html#t19))]
     ** perform boolean operation
 
-
+---
+layout: two-cols
+level: 2
+---
 ---
 
 # API
