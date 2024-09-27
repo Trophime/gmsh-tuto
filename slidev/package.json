@@ -11,6 +11,11 @@
     "@slidev/cli": "^0.49.29",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
+    "markdown-it": "^14.1.0",
+    "markdown-it-mdc": "^0.2.5",
     "vue": "^3.4.38"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.47.2"
   }
 }

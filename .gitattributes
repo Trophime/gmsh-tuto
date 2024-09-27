@@ -1,4 +1,0 @@
-*.png filter=lfs diff=lfs merge=lfs -text
-*.stl filter=lfs diff=lfs merge=lfs -text
-*.brep filter=lfs diff=lfs merge=lfs -text
-*.xao filter=lfs diff=lfs merge=lfs -text
