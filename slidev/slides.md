@@ -60,14 +60,14 @@ Gmsh is an open source 3D finite element mesh generator with:
 Gmsh can be controlled from:
 
 - 🧑‍ **GUI** - a graphical user interface
-- 🤹 **TUI** - the command line, using text files written in Gmsh's own scripting language (.geo files),
-- 🎥 **API** - for C++, C, Python, Julia and Fortran
+- 💻 **TUI** - the command line, using text files written in Gmsh's own scripting language (.geo files),
+- 🤖 **API** - for C++, C, Python, Julia and Fortran
 <br>
 <br>
 
-Read more about [Gmsh](https://gmsh.info/)
+📖 Read more about [Gmsh](https://gmsh.info/)
 
-A nice [introduction](https://bthierry.pages.math.cnrs.fr/tutorial/gmsh/)
+📓 A nice [introduction](https://bthierry.pages.math.cnrs.fr/tutorial/gmsh/)
 
 <!--
 You can have `style` tag in markdown to override the style for the current page.
@@ -110,7 +110,7 @@ sudo apt update
 sudo apt install gmsh libgmsh-dev python3-gmsh [libgmsh-dev libfltk1.3-dev] 
 ```
 
-* Python env
+* 🐍 Python env
 
 ```bash
 python3 -m venv --system-site-packages gmsh-env
@@ -118,7 +118,7 @@ source ./gmsh-env/bin/activate
 python3 -m pip install gmsh
 ```
 
-* Container
+* 🥡 Container
   * Docker
 
 ```bash
@@ -138,13 +138,24 @@ For this tutorial, we recommend to use the python virtual environment.
 ---
 layout: two-cols
 ---
+
 # GUI
 
 * ⚙️ Main Options
   * **General**  (Tools/Options, General tab)
 
+* 📷 Camera
+  
+  | **Operation** | Mouse | Trackpad |
+  | --------- | ----- | -------- |
+  | Rotation  | left click |  left click |  
+  | Translation  | right click |  right click |  
+  | Zoom  | Wheel |  multi-finger |
+
 ::right::
 <img src="/img/gmsh-general.png" />
+
+
 ---
 layout: two-cols
 hideInToc: true
@@ -157,6 +168,8 @@ hideInToc: true
 
 ::right::
 <img src="/img/gmsh-geometry.png" />
+
+
 ---
 transition: fade-out
 layout: two-cols
@@ -271,7 +284,7 @@ hideInToc: true
 # Cube with Hole
 
 * Edit geo file content
-* Add params
+* Add params (see [syntax](https://gitlab.onelab.info/doc/tutorials/-/wikis/ONELAB-syntax-for-Gmsh-and-GetDP))
 * Use TUI mode
 
 ```bash
@@ -281,7 +294,7 @@ gmsh [-2] square.geo
 
 ::right::
 
-```gmsh {-|1|3-4|8-11|13-16|18-19|20-22|all}
+```gmsh {-|1|3-5|8-11|13-16|18-19|20-22|all}
 SetFactory("Built-in");
 
 Lc = DefineNumber[ 0.1, Name "Parameters/Lc" ];
@@ -519,17 +532,31 @@ hideInToc: true
 * TureKHron benchmark geometry
   * create from scratch
   * add params for dimension and lc
-  * create a macro for solid part
-  * use **Translate** with **Duplicate**
-
-```gmsh
-Translate {0, 0.05, 0} { Duplicata{ Surface{1,2}; } }
-```
-
-see:  [t2.geo](https://gmsh.info/doc/texinfo/gmsh.html#t2)
 
 ::right::
 <img src="/img/TurekHronFSIGeometry.png" >
+Sketch of the geometry
+
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Exercises
+
+* Bitter magnet
+  * create a macro for hole
+  * use **Rotate** with **Duplicata**
+
+```gmsh
+Rotate {{0,0,1}, {0,0,0}, -Pi/4} { Duplicata{ Surface{1}; } }
+```
+
+see: [t2.geo](https://gmsh.info/doc/texinfo/gmsh.html#t2)
+
+::right::
+<img src="/img/Bitter.png" >
 Sketch of the geometry
 
 
@@ -677,6 +704,18 @@ Save "file.brep";
 ⚠️ STL can not be converted to other format ⚠️
 
 <Comp src="/img/t13_data.png" width=80 />
+---
+level: 3
+layout: image-right
+backgroundSize: 90% 60%
+hideInToc: true
+---
+
+# Defeaturing
+
+* experimental features
+
+
 
 ---
 layout: two-cols
@@ -691,6 +730,7 @@ hideInToc: true
   * Helix geometry:
     * Create a cylinder
     * Create an helix (see [t9.geo](https://gmsh.info/doc/texinfo/gmsh.html#t19))
+      * use parametric helix equation
     * Perform boolean operation
 
 ---
@@ -759,8 +799,14 @@ hideInToc: true
 # Cube with holes
 
 * rewrite using OCC API
-* use `argparse` for setting arguments in command line 
+  * for holes:
+    * create a method
+    * `gmsh.model.geo.addCircleArc`
+* use `argparse` 
+  * setting arguments in command line 
 
+
+see [t7.py](https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_13_1/tutorials/python/t5.py#L107)
 
 ---
 level: 3
@@ -805,9 +851,12 @@ hideInToc: true
 # A thermal fin
 
 * use:
-  * **fragment** boolean operation
+  * `BooleanFragments' boolean operation
   * "snippet" for defining markers
 * run feelp heat toolbox
+
+
+see: [t16.py](https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_13_1/tutorials/python/t16.py#L50)
 
 ::right::
 
@@ -922,10 +971,12 @@ To get quad mesh, add:
 ```gmsh
 Recombine Surface{1};
 ```
-* see [t6.geo](https://gmsh.info/doc/texinfo/gmsh.html#t6)
+
+see [t6.geo](https://gmsh.info/doc/texinfo/gmsh.html#t6)
 
 ::right::
 <img src="/img/gmsh-transfinite-surface.png" />
+
 ---
 layout: two-cols
 level: 2
@@ -964,9 +1015,9 @@ hideInToc: true
 
 * from 2D struct mesh, Elevation / Extrusion:
 
-  ** 2 layers
-  *** 1 layer: 8 subsections, with a height of 0.25*Lz
-  *** 2 layer: 2 subsections, with a height of 0.75*Lz
+  * 2 layers
+    * 1 layer: 8 subsections, with a height of 0.25*Lz
+    * 2 layer: 2 subsections, with a height of 0.75*Lz
 
 ```gmsh
 Merge "square.geo";
@@ -983,6 +1034,7 @@ Lz =1;
 out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} }; Recombine;}
 Physical Volume("cube") = {out[0]};
 ```
+
 * see [t3.geo](https://gmsh.info/doc/texinfo/gmsh.html#t3)
 
 ::right::
@@ -998,12 +1050,40 @@ hideInToc: true
 
 # UnStructured Mesh
 
-* load geo file
-* select algorithm
+* Load geo file
+* Select algorithm
+
+```gmsh
+Mesh.Algorithm=MeshAlgo2D;
+Mesh.Algorithm3D=MeshAlgo2D;
+```
+
 * Mesh:
-  ** type `F2` for 2D
-  ** type `F3` for 3D
+  * type `F2` for 2D
+  * type `F3` for 3D
 * Export Mesh
+
+::right::
+| **2D Algorithm** | code | comment |
+| ------------ | ---- | ----|
+| MeshAdapt  | 1 | |
+| Delaunay | 5 | |
+| Frontal-Delaunay | 6 | |
+| BAMG |  7 | |
+| **3D Algorithm**  | | |
+| Delaunay         |  1  | |
+| Frontal | 4 | |
+| HXT |10 | |
+| MMG | 7 | |
+
+To select the algo to be used:
+
+```gmsh
+Mesh.Algorithm=MeshAlgo2D;
+Mesh.Algorithm3D=MeshAlgo2D;
+```
+
+
 
 ---
 layout: two-cols
@@ -1011,7 +1091,60 @@ layout: two-cols
 
 # Mesh in HPC context
 
-* partitionning
+* Partitionning
+  * "Split" in nproc "parts"
+  * 2 algorithms
+    * Metis
+    * SimplePartition
+    
+  
+```gmsh
+// Metis
+PartitionMesh N;
+```
+
+```gmsh
+// Use the `SimplePartition' plugin to create chessboard-like partitions
+Plugin(SimplePartition).NumSlicesX = N;
+Plugin(SimplePartition).NumSlicesY = 1;
+Plugin(SimplePartition).NumSlicesZ = 1;
+Plugin(SimplePartition).Run;
+```
+
+⚠️ in Feelpp, use build-in mesh partitioner ⚠️ 
+
+::right::
+
+<img src="/img/gmsh-partitions.png" >
+---
+layout: two-cols
+---
+
+# Mesh in HPC context
+
+* Partitionning
+  * "Split" in nproc "parts"
+  * 2 algorithms
+    * Metis
+    * SimplePartition
+      
+```python
+# Metis
+gmsh.model.mesh.partition(N)
+```
+
+```python
+# Use the `SimplePartition' plugin to create chessboard-like partitions
+gmsh.plugin.setNumber("SimplePartition", "NumSlicesX", N)
+gmsh.plugin.setNumber("SimplePartition", "NumSlicesY", 1)
+gmsh.plugin.setNumber("SimplePartition", "NumSlicesZ", 1)
+gmsh.plugin.run("SimplePartition")
+```
+
+
+::right::
+
+<img src="/img/gmsh-partitions.png" >
 
 ---
 layout: two-cols
@@ -1020,58 +1153,43 @@ layout: two-cols
 # Mesh using Gmsh API
 
 ```python
-import gmsh
-import sys
-
-gmsh.initialize()
-gmsh.model.add("square")
-
-import argparse
-parser = argparse.ArgumentParser(add_help=False)
-parser.add_argument('-lc', help="mesh characteristic length", type=float, default=0.1)
-parser.add_argument('-Lx', help="Length along OX", type=float, default=0.25)
-parser.add_argument('-Ly', help="Length along OY", type=float, default=0.25)
-parser.add_argument('-nopopup', action='store_true')  # on/off flag
-args = parser.parse_args()
-
-Lx = args.Lx
-Ly = args.Ly
-lc = args.lc
-
-p1 = gmsh.model.geo.addPoint(-Lx, -Ly, 0, lc, 1)
-p2 = gmsh.model.geo.addPoint(Lx, -Ly, 0, lc, 2)
-p3 = gmsh.model.geo.addPoint(Lx, Ly, 0, lc, 3)
-p4 = gmsh.model.geo.addPoint(-Lx, Ly, 0, lc)
-
-# Lines
-gmsh.model.geo.addLine(p1, p2, 1)
-gmsh.model.geo.addLine(p3, p2, 2)
-gmsh.model.geo.addLine(p3, p4, 3)
-gmsh.model.geo.addLine(p4, p1, p4)
-
-gmsh.model.geo.addCurveLoop([4, 1, -2, 3], 1)
-
-gmsh.model.geo.addPlaneSurface([1], 1)
-gmsh.model.geo.synchronize()
-
 gmsh.model.addPhysicalGroup(1, [1], name="Ox")
-gmsh.model.addPhysicalGroup(1, [2, 3, 4], name="others")
 gmsh.model.addPhysicalGroup(2, [1], name="Top")
 
 gmsh.model.mesh.generate(2)
+gmsh.option.setNumber("Mesh.Algorithm", MeshAlgo2D)
+# gmsh.option.setNumber("Mesh.Algorithm3D", MeshAlgo2D)
+
+gmsh.model.mesh.setSize(gmsh.model.getEntities(0), args.lc)
 gmsh.write("t1.msh")
-
-if not args.nopopup:
-    gmsh.fltk.run()
-
-gmsh.finalize()
 ```
+
+::right::
+
+| **2D Algorithm** | code | comment |
+| ------------ | ---- | ----|
+| MeshAdapt  | 1 | |
+| Delaunay | 5 | |
+| Frontal-Delaunay | 6 | |
+| BAMG |  7 | |
+| **3D Algorithm**  | | |
+| Delaunay         |  1  | |
+| Frontal | 4 | |
+| HXT |10 | |
+| MMG | 7 | |
+
 
 ---
 layout: two-cols
 ---
 
 # Adapt Mesh
+
+* Refine Mesh
+  * globaly
+  * localy
+
+
 
 ---
 layout: two-cols

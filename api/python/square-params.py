@@ -48,6 +48,7 @@ gmsh.model.addPhysicalGroup(2, [1], name="Top")
 
 # generate a 2D mesh...
 gmsh.model.mesh.generate(2)
+gmsh.model.mesh.setSize(gmsh.model.getEntities(0), args.lc)
 gmsh.write("t1.msh")
 
 # To visualize the model we can run the graphical user interface with
