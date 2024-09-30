@@ -106,8 +106,6 @@ ENV/
 
 # Mesg
 *.msh
-*.xao
-*.brep
 *~
 
 # data folder
