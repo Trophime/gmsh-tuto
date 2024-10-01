@@ -152,6 +152,8 @@ layout: two-cols
   | Translation  | right click |  right click |  
   | Zoom  | Wheel |  multi-finger |
 
+💡 Use Vscode for editing **geo** 
+   with [vscode-gmsh](https://marketplace.visualstudio.com/items?itemName=Bertrand-Thierry.vscode-gmsh) 💡
 ::right::
 <img src="/img/gmsh-general.png" />
 
@@ -1091,7 +1093,7 @@ layout: two-cols
 
 # Mesh in HPC context
 
-* Partitionning
+* Partitionning (GUI)
   * "Split" in nproc "parts"
   * 2 algorithms
     * Metis
@@ -1118,11 +1120,12 @@ Plugin(SimplePartition).Run;
 <img src="/img/gmsh-partitions.png" >
 ---
 layout: two-cols
+hideInToc: true
 ---
 
 # Mesh in HPC context
 
-* Partitionning
+* Partitionning (Python API)
   * "Split" in nproc "parts"
   * 2 algorithms
     * Metis

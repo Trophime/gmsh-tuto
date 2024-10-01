@@ -19,6 +19,8 @@ for dim in range(3):
     for gdim, gtag in groups:
         print(f'{gmsh.model.getPhysicalName(gdim, gtag)}: id={gtag}')
 
+# if 3D groups are empty, error message
+
 # To visualize the model we can run the graphical user interface with
 if not args.nopopup:
     gmsh.fltk.run()
