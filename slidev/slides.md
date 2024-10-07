@@ -233,6 +233,15 @@ hideInToc: true
 
 ---
 layout: two-cols
+---
+
+# CAD
+
+* Build-In Kernel
+* OpenCascade Kernel
+
+---
+layout: two-cols
 level: 2
 ---
 
@@ -294,6 +303,10 @@ gmsh [-2] square.geo
 ```
 <img src="/img/gmsh-square-params.png">
 
+
+* Save as `square-params.geo`
+
+
 ::right::
 
 ```gmsh {-|1|3-5|8-11|13-16|18-19|20-22|all}
@@ -342,7 +355,7 @@ Your turn...
 ::right::
 
 ```gmsh {1|5|11-14}
-Include "square.geo";
+Include "square-params.geo";
 
 // extrude
 Lz = DefineNumber[ 0.25, Name "Parameters/Lz" ];
@@ -374,6 +387,9 @@ What to do?
 
 * ⚠️ use clear button in Message Console
 
+
+* Correct the syntax of `Other` physical
+
 ::right::
 
 <img src="/img/gmsh-message.png" />
@@ -392,14 +408,18 @@ hideInToc: true
   * radius
   * Lc_h
 
-Note the sign of the Curve Loop defining the surface
+Note:
+* the sign of the Curve Loop defining the surface
+* a new surface with **id=2** for the square - hole
 
 <img src="/img/gmsh-trou-params.png">
 
 ::right::
 
 ```gmsh {4-22, maxHeight:'100px'}
-Include "square.geo";
+Include "square-params.geo";
+Delete Physicals;
+Delete{ Surface{1};}
 
 // Add parameters
 Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
@@ -420,7 +440,7 @@ c8=newl; Circle(c8) = {p8,O,p5};
 
 // create square with a hole
 Curve Loop(2) = {c5:c8};
-Plane Surface(1) = {1, -2};
+Plane Surface(2) = {1, -2};
 ```
 ---
 layout: two-cols
@@ -473,13 +493,17 @@ hideInToc: true
 ::right::
 
 ```gmsh {9}
-...
+Include "square-params.geo";
+Include "CHole.geo";
+Delete Physicals;
+Delete{ Surface{1};}
 
 // Add parameters
 Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
 R = DefineNumber[ 0.05, Name "Parameters/R" ];
 
 // create a Disk
+t = 0;
 x0 = 0; y0 = 0;
 Call CHole;
 
@@ -500,17 +524,20 @@ level: 3
 ::right::
 
 ```gmsh {13-21}
-Include "square.geo";
-
-// create a Disk
-Macro CHole
-      ...
+Include "square-params.geo";
+Include "CHole.geo";
+Delete Physicals;
+Delete{ Surface{1};}
 
 // Add parameters
 Lc_h = DefineNumber[ 0.1, Name "Parameters/Lc_h" ];
 R = DefineNumber[ 0.05, Name "Parameters/R" ];
 
+Nx = DefineNumber[ 1, Name "Parameters/Nx" ];
+Ny = DefineNumber[ 1, Name "Parameters/Ny" ];
+
 // create holes
+t = 0;
 loop [] = {};
 For i In {1:Nx}
     x0 = -Lx + i * 2*Lx/(Nx+1);
@@ -637,6 +664,9 @@ hideInToc: true
   * Move the cylinder
   * Perform the boolean op
 
+* `Recursive Delete`: remove all the surfaces (and their bounding entities) that are not on the boundary of a volume, i.e. the parts of the cutting planes that "stick out"
+of the volume
+
 ::right::
 
 ```gmsh
@@ -709,6 +739,7 @@ Save "file.brep";
 ---
 level: 3
 layout: image-right
+image: /img/defeaturing_002.png
 backgroundSize: 90% 60%
 hideInToc: true
 ---
@@ -716,6 +747,21 @@ hideInToc: true
 # Defeaturing
 
 * experimental features
+  * fillet/chamfer
+
+---
+level: 3
+layout: image-right
+image: /img/defeaturing_003.png
+backgroundSize: 90% 60%
+hideInToc: true
+---
+
+# Defeaturing
+
+* experimental features
+  * fillet/chamfer
+
 
 
 
@@ -737,7 +783,6 @@ hideInToc: true
 
 ---
 layout: two-cols
-level: 2
 ---
 
 # API
@@ -748,7 +793,6 @@ level: 2
 [Documentation](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-application-programming-interface) ·   [Tutorials](https://gitlab.onelab.info/gmsh/gmsh/-/tree/gmsh_4_13_1/tutorials/python) ·  [Examples](https://gitlab.onelab.info/gmsh/gmsh/-/tree/gmsh_4_13_1/examples/api)
 
 ---
-layout: two-cols
 level: 2
 ---
 # Python API
@@ -756,17 +800,29 @@ level: 2
 * start gmsh
 
 ```python
+# load gmsh module
 import gmsh
 import sys
 
+# init gmsh API
 gmsh.initialize()
 
+# instructions for building CAD shall be inserted here
+
+# view gmsh GUI
 if '-nopopup' not in sys.argv:
     gmsh.fltk.run()
 ```
 
 
 ::right::
+
+
+---
+level: 2
+hideInToc: true
+---
+# Python API
 
 * cube example
 
@@ -778,19 +834,50 @@ Lx = Ly = 1
 
 # define points
 p1 = gmsh.model.geo.addPoint(-Lx, -Ly, 0, Lc)
-...
+p2 = ...
 
 # create lines
-gmsh.model.geo.addLine(p1, p2, 1)
-...
+l1 = gmsh.model.geo.addLine(p1, p2)
+l2 = ...
 
 # create surface
-gmsh.model.geo.addCurveLoop([1, 2, 3, 4], 1)
+gmsh.model.geo.addCurveLoop([l1, 2, 3, 4], 1)
 gmsh.model.geo.addPlaneSurface([1], 1)
 
 # Force synchro
 gmsh.model.geo.synchronize()
 ```
+
+::right::
+
+---
+level: 2
+hideInToc: true
+---
+# Python API
+
+* to add params: use `argparse` module
+
+```python
+import argparse
+parser = argparse.ArgumentParser(add_help=False)
+parser.add_argument('-lc', help="mesh characteristic length", type=float, default=0.1)
+parser.add_argument('-Lx', help="Length along OX", type=float, default=0.25)
+parser.add_argument('-Ly', help="Length along OY", type=float, default=0.25)
+parser.add_argument('-nopopup', action='store_true')  # on/off flag
+args = parser.parse_args()
+
+Lx = args.Lx
+Ly = args.Ly
+lc = args.lc
+
+...
+
+if not args.nopopup:
+    gmsh.fltk.run()
+```
+
+::right::
 
 ---
 layout: two-cols
@@ -803,12 +890,12 @@ hideInToc: true
 * rewrite using OCC API
   * for holes:
     * create a method
-    * `gmsh.model.geo.addCircleArc`
+    * `gmsh.model.occ.addCircle`
 * use `argparse` 
   * setting arguments in command line 
 
 
-see [t7.py](https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_13_1/tutorials/python/t5.py#L107)
+see [t19.py](https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_13_1/tutorials/python/t19.py#L25)
 
 ---
 level: 3
@@ -916,14 +1003,27 @@ g++ test.o -lgmsh -o test.exe
 layout: two-cols
 ---
 
-# Meshing: GUI menu
+# Mesh
+
+* GUI mode
+* TUI mode
+* API
+
+---
+layout: two-cols
+level: 2
+---
+
+# GUI mode
 
 * ⚙️ Main options
   * 🌲 **Left tree**
   * 🔍 **Tools/Options/Mesh**
   * 🔢 Tools/Statistics
   * 👻 Tools/Visibility
+  * ✍️ File/Save Mesh 
 
+⚠️ Require at least one Physical def ⚠️
 
 ::right::
 
@@ -931,10 +1031,11 @@ layout: two-cols
 
 ---
 layout: two-cols
+level: 2
 ---
 
 
-# Meshing
+# TUI mode
 
 * Structured Mesh
 * Unstructed Mesh
@@ -953,7 +1054,7 @@ gmsh -0 mesh_in.med [-bin] -o mesh_out.msh
 
 ---
 layout: two-cols
-level: 2
+level: 3
 hideInToc: true
 ---
 
@@ -981,7 +1082,7 @@ see [t6.geo](https://gmsh.info/doc/texinfo/gmsh.html#t6)
 
 ---
 layout: two-cols
-level: 2
+level: 3
 hideInToc: true
 ---
 
@@ -1007,7 +1108,7 @@ Transfinite Surface{1:4};
 
 ---
 layout: two-cols
-level: 2
+level: 3
 hideInToc: true
 ---
 
@@ -1089,9 +1190,10 @@ Mesh.Algorithm3D=MeshAlgo2D;
 
 ---
 layout: two-cols
+hideInToc: true
 ---
 
-# Mesh in HPC context
+# HPC context
 
 * Partitionning (GUI)
   * "Split" in nproc "parts"
@@ -1123,7 +1225,7 @@ layout: two-cols
 hideInToc: true
 ---
 
-# Mesh in HPC context
+# HPC context
 
 * Partitionning (Python API)
   * "Split" in nproc "parts"
@@ -1151,9 +1253,10 @@ gmsh.plugin.run("SimplePartition")
 
 ---
 layout: two-cols
+level: 2
 ---
 
-# Mesh using Gmsh API
+# API mode
 
 ```python
 gmsh.model.addPhysicalGroup(1, [1], name="Ox")
@@ -1161,10 +1264,10 @@ gmsh.model.addPhysicalGroup(2, [1], name="Top")
 
 gmsh.model.mesh.generate(2)
 gmsh.option.setNumber("Mesh.Algorithm", MeshAlgo2D)
-# gmsh.option.setNumber("Mesh.Algorithm3D", MeshAlgo2D)
+# gmsh.option.setNumber("Mesh.Algorithm3D", MeshAlg32D)
 
 gmsh.model.mesh.setSize(gmsh.model.getEntities(0), args.lc)
-gmsh.write("t1.msh")
+gmsh.write("square.msh")
 ```
 
 ::right::
@@ -1196,6 +1299,7 @@ layout: two-cols
 
 ---
 layout: two-cols
+hideInToc: true
 ---
 # Moving Mesh
 
