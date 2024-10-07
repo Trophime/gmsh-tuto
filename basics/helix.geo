@@ -30,10 +30,10 @@ sections = {};
 For i In {0 : npts}
   theta = i * 2*Pi*nturns/npts;
   Printf("helix[%g]=%g", i, theta);
-  p = newp; Point(p) = {r * Cos(theta), r * Sin(theta), -h + i * h/npts};
+  p = newp; Point(p) = {r * Cos(theta), r * Sin(theta), -h/2. + i * h/npts};
   points[i] = p;
   ns() = Rotate {{0, 0, 1}, {0, 0, 0}, theta} { Duplicata{Surface{s};} };
-  nns() = Translate {0, 0, -h + i * h/npts} { Surface{ns()}; };
+  nns() = Translate {0, 0, -h/2. + i * h/npts} { Surface{ns()}; };
   sections[i] = nns;
 EndFor
 
