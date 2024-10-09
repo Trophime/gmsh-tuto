@@ -115,7 +115,7 @@ sudo apt install gmsh libgmsh-dev python3-gmsh [libgmsh-dev libfltk1.3-dev]
 ```bash
 python3 -m venv --system-site-packages gmsh-env
 source ./gmsh-env/bin/activate
-python3 -m pip install gmsh
+python3 [-i] -m pip install gmsh
 ```
 
 * 🥡 Container
