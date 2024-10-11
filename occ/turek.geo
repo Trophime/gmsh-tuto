@@ -47,11 +47,14 @@ EndFor
 
 sdomain() = BooleanFragments{ Surface{domain()}; Delete;} { Line{tail}; Delete; };
 For i In {0 : #domain()-1}
-   Printf("domain[%g]=%g", i, domain(i));
+   Printf("sdomain[%g]=%g", i, sdomain(i));
 EndFor
-solid = domain[3];
-fluid = domain[1];
+solid = sdomain[2];
+fluid = sdomain[0];
 
-Physical Surface("solid") = {flag};
+Printf("solid=%g", solid);
+Printf("fluid=%g", fluid);
+
+Physical Surface("solid") = {solid};
 Physical Line("tail") = {tail};
 Physical Surface("fluid") = {fluid};
