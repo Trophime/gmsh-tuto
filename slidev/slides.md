@@ -1125,7 +1125,7 @@ hideInToc: true
 ```gmsh
 Merge "square.geo";
 Lz =1;
-out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} };}
+out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} };};
 Physical Volume("cube") = {out[0]};
 ```
 
@@ -1158,7 +1158,7 @@ hideInToc: true
 
 ```gmsh
 Mesh.Algorithm=MeshAlgo2D;
-Mesh.Algorithm3D=MeshAlgo2D;
+Mesh.Algorithm3D=MeshAlgo3D;
 ```
 
 * Mesh:
@@ -1203,13 +1203,15 @@ hideInToc: true
     
   
 ```gmsh
+Merge "cube.msh";
+
 // Metis
-PartitionMesh N;
+PartitionMesh 10;
 ```
 
 ```gmsh
 // Use the `SimplePartition' plugin to create chessboard-like partitions
-Plugin(SimplePartition).NumSlicesX = N;
+Plugin(SimplePartition).NumSlicesX = 10;
 Plugin(SimplePartition).NumSlicesY = 1;
 Plugin(SimplePartition).NumSlicesZ = 1;
 Plugin(SimplePartition).Run;
