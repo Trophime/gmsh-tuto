@@ -1198,8 +1198,8 @@ hideInToc: true
 * Partitionning (GUI)
   * "Split" in nproc "parts"
   * 2 algorithms
-    * Metis
-    * SimplePartition
+    * **Metis**
+    * SimplePartition (chessboard-like)
     
   
 ```gmsh
@@ -1209,7 +1209,33 @@ Merge "cube.msh";
 PartitionMesh 10;
 ```
 
+* Partition (TUI)
+
+```bash
+gmsh basics/square-transfinite-surface.geo -2 -part 64 -clscale 0.05
+```
+
+::right::
+
+<img src="/img/gmsh-partitions.png" >
+
+---
+layout: two-cols
+hideInToc: true
+---
+
+# HPC context
+
+* Partitionning (GUI)
+  * "Split" in nproc "parts"
+  * 2 algorithms
+    * Metis
+    * **SimplePartition** (chessboard-like)
+    
+  
 ```gmsh
+Merge "cube.msh";
+
 // Use the `SimplePartition' plugin to create chessboard-like partitions
 Plugin(SimplePartition).NumSlicesX = 10;
 Plugin(SimplePartition).NumSlicesY = 1;
@@ -1221,7 +1247,7 @@ Plugin(SimplePartition).Run;
 
 ::right::
 
-<img src="/img/gmsh-partitions.png" >
+<img src="/img/gmsh-partitions-chessboard.png" >
 ---
 layout: two-cols
 hideInToc: true
@@ -1241,13 +1267,14 @@ gmsh.model.mesh.partition(N)
 ```
 
 ```python
-# Use the `SimplePartition' plugin to create chessboard-like partitions
+# SimplePartition plugin
 gmsh.plugin.setNumber("SimplePartition", "NumSlicesX", N)
 gmsh.plugin.setNumber("SimplePartition", "NumSlicesY", 1)
 gmsh.plugin.setNumber("SimplePartition", "NumSlicesZ", 1)
 gmsh.plugin.run("SimplePartition")
 ```
 
+* see [t21.geo](https://gmsh.info/doc/texinfo/gmsh.html#t21)
 
 ::right::
 
@@ -1289,14 +1316,174 @@ gmsh.write("square.msh")
 
 ---
 layout: two-cols
+level: 2
 ---
 
 # Adapt Mesh
 
 * Refine Mesh
-  * globaly
-  * localy
+  * **globaly**: Use `Modules/Mesh/Refine by splitting`
+  * local : Use  `Field`plugins
 
+::right::
+<img src="/img/square-transfinite-surface-mesh0.png" >
+
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Adapt Mesh
+
+* Refine Mesh
+  * **globaly**: Use `Modules/Mesh/Refine by splitting`
+  * local : Use  `Field`plugins
+
+::right::
+<img src="/img/square-transfinite-surface-mesh1.png" >
+
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Adapt Mesh
+
+* Refine Mesh
+  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * **local** : Use  `Field` plugins
+
+```gmsh
+Merge "square.geo";
+
+// Distance Field
+Field[1] = Distance;
+Field[1].PointsList = {1};
+
+Field[2] = Threshold;
+Field[2].InField = 1;
+Field[2].SizeMin = lc / 30;
+Field[2].SizeMax = lc;
+Field[2].DistMin = 0.15;
+Field[2].DistMax = 0.5;
+Background Field = 2;
+
+```
+
+::right::
+<img src="/img/square-mesh.png" >
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Adapt Mesh
+
+* Refine Mesh
+  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * **local** : Use  `Field` plugins
+
+```gmsh
+Merge "square.geo";
+
+// Distance Field
+Field[1] = Distance;
+Field[1].PointsList = {1};
+
+Field[2] = Threshold;
+Field[2].InField = 1;
+Field[2].SizeMin = lc / 30;
+Field[2].SizeMax = lc;
+Field[2].DistMin = 0.15;
+Field[2].DistMax = 0.5;
+Background Field = 2;
+
+```
+
+::right::
+<img src="/img/square-adapt-point.png" >
+
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Adapt Mesh
+
+* Refine Mesh
+  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * **local** : Use  `Field` plugins
+
+```gmsh
+Merge "square.geo";
+
+// Distance Field
+Field[1] = Distance;
+Field[1].CurvesList = {1,3};
+Field[1].Sampling = 200;
+
+Field[2] = Threshold;
+Field[2].InField = 1;
+Field[2].SizeMin = lc / 10;
+Field[2].SizeMax = lc;
+Field[2].DistMin = 0.005;
+Field[2].DistMax = 0.025;
+Background Field = 2;
+
+```
+
+::right::
+<img src="/img/square-adapt-lines.png" >
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Adapt Mesh
+
+* Refine Mesh
+  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * **local** : Use  `Field` plugins
+
+```gmsh
+Merge "square.geo";
+
+// `Box' field to impose element sizes inside a box
+Field[1] = Box;
+Field[1].VIn = lc / 15;
+Field[1].VOut = lc;
+Field[1].XMin = -0.7;
+Field[1].XMax = 0.7;
+Field[1].YMin = -0.7;
+Field[1].YMax = 0.7;
+Field[1].ZMin = -1;
+Field[1].ZMax = -1;
+Field[1].Thickness = 0.1;
+
+Background Field = 1;
+```
+
+::right::
+<img src="/img/square-adapt-box.png" >
+
+---
+layout: two-cols
+level: 2
+hideInToc: true
+---
+
+# Adapt Mesh
+
+* Refine Mesh
+  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * **local** : Combine  `Field` plugins
+
+* see [t10.geo](https://gmsh.info/doc/texinfo/gmsh.html#t10)
 
 
 ---
@@ -1304,6 +1491,8 @@ layout: two-cols
 hideInToc: true
 ---
 # Moving Mesh
+
+
 
 ---
 layout: center
