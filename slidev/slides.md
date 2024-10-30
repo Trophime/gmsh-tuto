@@ -1243,7 +1243,7 @@ Plugin(SimplePartition).NumSlicesZ = 1;
 Plugin(SimplePartition).Run;
 ```
 
-⚠️ in Feelpp, use build-in mesh partitioner ⚠️ 
+⚠️In Feelpp, use [build-in mesh partitioner](https://docs.feelpp.org/user/latest/using/tools/mesh_partitioner.html) ⚠️ 
 
 ::right::
 
@@ -1322,8 +1322,9 @@ level: 2
 # Adapt Mesh
 
 * Refine Mesh
-  * **globaly**: Use `Modules/Mesh/Refine by splitting`
-  * local : Use  `Field`plugins
+  * **globaly**: 
+    * `Modules/Mesh/Refine by splitting`
+  * local : Use  `Field` plugins
 
 ::right::
 <img src="/img/square-transfinite-surface-mesh0.png" >
@@ -1337,8 +1338,9 @@ hideInToc: true
 # Adapt Mesh
 
 * Refine Mesh
-  * **globaly**: Use `Modules/Mesh/Refine by splitting`
-  * local : Use  `Field`plugins
+  * **globaly**: 
+    * `Modules/Mesh/Refine by splitting`
+  * local : Use `Field` plugins
 
 ::right::
 <img src="/img/square-transfinite-surface-mesh1.png" >
@@ -1352,7 +1354,8 @@ hideInToc: true
 # Adapt Mesh
 
 * Refine Mesh
-  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * globaly: 
+    * `Modules/Mesh/Refine by splitting`
   * **local** : Use  `Field` plugins
 
 ```gmsh
@@ -1383,7 +1386,8 @@ hideInToc: true
 # Adapt Mesh
 
 * Refine Mesh
-  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * globaly: 
+    * Use `Modules/Mesh/Refine by splitting`
   * **local** : Use  `Field` plugins
 
 ```gmsh
@@ -1415,7 +1419,8 @@ hideInToc: true
 # Adapt Mesh
 
 * Refine Mesh
-  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * globaly: 
+    * `Modules/Mesh/Refine by splitting`
   * **local** : Use  `Field` plugins
 
 ```gmsh
@@ -1447,7 +1452,8 @@ hideInToc: true
 # Adapt Mesh
 
 * Refine Mesh
-  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * globaly: 
+    * `Modules/Mesh/Refine by splitting`
   * **local** : Use  `Field` plugins
 
 ```gmsh
@@ -1480,7 +1486,8 @@ hideInToc: true
 # Adapt Mesh
 
 * Refine Mesh
-  * globaly: Use `Modules/Mesh/Refine by splitting`
+  * globaly: 
+    * `Modules/Mesh/Refine by splitting`
   * **local** : Combine  `Field` plugins
 
 * see [t10.geo](https://gmsh.info/doc/texinfo/gmsh.html#t10)
@@ -1499,7 +1506,7 @@ layout: center
 class: text-center
 ---
 
-# Learn More
+# Learn More on **Gmsh** 
 
 [Documentation](https://gmsh.info/#Documentation) · [GitLab](https://gitlab.onelab.info/gmsh/gmsh/) · [Tutorials](https://gmsh.info/doc/texinfo/gmsh.html#Gmsh-tutorial)
 
