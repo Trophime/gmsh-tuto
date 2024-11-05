@@ -37,14 +37,6 @@ For i In {0 : npts}
   sections[i] = nns;
 EndFor
 
-/*************
-// not working properly
-l=newl; Spline(l) = {points[]};
-// A wire is like a curve loop, but open:
-w = newl; Wire(w) = {l};
-// We extrude the disk along the spline to create a pipe:
-Extrude { Surface{s}; } Using Wire {w}
-***/
 
 hcut = news; Ruled ThruSections(hcut) = {sections[]};
 Printf('hcut=%g', hcut);
@@ -60,7 +52,7 @@ helix() = BooleanFragments{ Volume{cyl}; Delete;} { Volume{hcut}; Delete; };
 For i In {0 : #helix()-1}
    Printf("helix[%g]=%g", i, helix(i));
 EndFor
-Delete { Volume{helix(2), helix(3)};}
+Recursive Delete { Volume{helix(2), helix(3)};}
 
 // We delete the source surface, and increase the number of sub-edges for a
 // nicer display of the geometry:
@@ -81,4 +73,14 @@ Physical Volume("Cu") = {helix(0)};
 // Physical Volume("Glue") = {helix(1)};
 
 f() = Abs(Boundary{ Volume{helix(0)}; });
-Physical Surface("Bord") = {f()};
+For i In {0 : #f()-1}
+   Printf("helix[%g]=%g", i, f(i));
+EndFor
+
+//Physical Surface("Bord") = {f()};
+Physical Surface("Rint") = {15, 16, 36, 55, 74, 93, 112, 131}; 
+Physical Surface("Rext") = {2, 12, 26, 45, 65, 83, 103, 121}; 
+Physical Surface("V0") = {14};
+Physical Surface("V1") = {133};
+Physical Surface("Interface") = {1, 3:11, 17:25, 27:35, 37:44, 46:54, 56:64, 66:73, 75:82, 84:92, 94:102, 104:111, 113:120, 132, 122:130, 134:141};
+//Physical Surface("qui") = {13};
