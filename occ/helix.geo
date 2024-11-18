@@ -11,14 +11,15 @@ SetFactory("OpenCASCADE");
 r1 = 19.3;
 r2 = 24.2;
 dz = 2*150;
-cut = 1;
+cut = 0.2;
 eps = 2;
 nturns = 7;
 pitch = 18.03646917296748;
 
-// We define the shape we would like to extrude along the spline (a disk):
+// We define the shape we would like to extrude along the spline:
 s=news; Rectangle(s) = {r1-eps, -cut/2., 0, r2-r1+2*eps, cut};
 Rotate {{1, 0, 0}, {0, 0, 0}, Pi/2} { Surface{s}; }
+Printf('Scut=%g', s);
 
 // OpenCASCADE also allows general extrusions along a smooth path.
 // Let's first define a spline curve:
@@ -29,7 +30,7 @@ points = {};
 sections = {};
 For i In {0 : npts}
   theta = i * 2*Pi*nturns/npts;
-  Printf("helix[%g]=%g", i, theta);
+  Printf("helix[%g]: theta=%g", i, theta);
   p = newp; Point(p) = {r * Cos(theta), r * Sin(theta), -h/2. + i * h/npts};
   points[i] = p;
   ns() = Rotate {{0, 0, 1}, {0, 0, 0}, theta} { Duplicata{Surface{s};} };
@@ -48,11 +49,11 @@ cyl = BooleanDifference { Volume{ext}; } { Volume{int}; };
 Recursive Delete { Volume {ext, int}; }
 
 helix() = BooleanFragments{ Volume{cyl}; Delete;} { Volume{hcut}; Delete; };
-//Recursive Delete { Volume {helix}; }
 For i In {0 : #helix()-1}
    Printf("helix[%g]=%g", i, helix(i));
 EndFor
 Recursive Delete { Volume{helix(2), helix(3)};}
+Recursive Delete { Surface{s};}
 
 // We delete the source surface, and increase the number of sub-edges for a
 // nicer display of the geometry:
@@ -65,8 +66,8 @@ Mesh.MeshSizeFromCurvature = 20;
 
 // We can constraint the min and max element sizes to stay within reasonnable
 // values (see `t10.geo' for more details):
-Mesh.MeshSizeMin = 1;
-Mesh.MeshSizeMax = 10;
+Mesh.MeshSizeMin = 0.1;
+Mesh.MeshSizeMax = 1;
 
 
 Physical Volume("Cu") = {helix(0)};
@@ -77,10 +78,8 @@ For i In {0 : #f()-1}
    Printf("helix[%g]=%g", i, f(i));
 EndFor
 
-//Physical Surface("Bord") = {f()};
 Physical Surface("Rint") = {15, 16, 36, 55, 74, 93, 112, 131}; 
 Physical Surface("Rext") = {2, 12, 26, 45, 65, 83, 103, 121}; 
 Physical Surface("V0") = {14};
 Physical Surface("V1") = {133};
-Physical Surface("Interface") = {1, 3:11, 17:25, 27:35, 37:44, 46:54, 56:64, 66:73, 75:82, 84:92, 94:102, 104:111, 113:120, 132, 122:130, 134:141};
-//Physical Surface("qui") = {13};
+Physical Surface("Interface") = {3:11, 13, 17:25, 27:35, 37:44, 46:54, 56:64, 66:73, 75:82, 84:92, 94:102, 104:111, 113:120, 122:130, 132, 134:141};
