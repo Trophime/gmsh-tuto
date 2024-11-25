@@ -1,0 +1,127 @@
+= The case
+
+see link:https://docs.feelpp.org/toolboxes/latest/thermoelectric/electromagnet/index.html[feelpp toolbox thermo-electric cases]
+
+== Data files
+
+=== Inspect the mesh with gmsh
+
+The mesh can be retrieve from girder with the following ID: link:https://girder.math.unistra.fr/api/v1/file/5af59e88b0e9574027047fc0/download[5af59e88b0e9574027047fc0] (see xref:contribute:girder:index.adoc[girder]).
+
+== Running the case
+
+The command line to run this case in linear is
+
+[[command-line-linear]]
+[source,mpirun]
+----
+mpirun -np 4 feelpp_toolbox_thermoelectric --case "github:{path:toolboxes/thermoelectric/cases/ElectroMagnets/HL-31_H1}"
+----
+
+The command line to run this case in non linear is
+
+[[command-line-nonlinear]]
+[source,mpirun]
+----
+mpirun -np 4 feelpp_toolbox_thermoelectric --case "github:{path:toolboxes/thermoelectric/cases/ElectroMagnets/HL-31_H1}" --case.config-file HL-31_H1_nonlinear.cfg
+----
+
+[Note]
+====
+These commands are using the cfg and json files stored in girder
+If you wish to use a custom cfg file, you can type:
+
+[source,mpirun]
+----
+mpirun -np 4 feelpp_toolbox_thermoelectric --config-file HL-31_H1.cfg
+----
+
+====
+
+== Viewing the results
+
+The results are stored in `/home/feelpp/feelppdb/toolboxes/fsi/movingboundary/np_4`
+if you run the simulation in the devcontainer. If not, check the output of of the command to 
+get the name of the basedir of the results.
+
+To view the results, you can either run paraview or use some pyvista scripts (see notes on jupyter)
+
+== Use a custon mesh
+
+* Download the mesh from girder and save to the directory containing the cfg file
+* Edit the json file: eg. HL-31_H1.json,
+* Replace the girder link by the actual mesh:
+
+[source,json]
+----
+    "Meshes":
+    {
+        "thermoelectric":
+        {
+            "Import":
+            {
+                "filename":"$cfgdir/HL-31_H1.msh",
+                "partition":1
+            }
+        }
+    },
+----
+
+[NOTE]
+====
+You can use an already partitionned mesh create with `feelpp_mesh_partitionner`
+In that case, the "Meshes" section of the json file, should be:
+
+[source,json]
+----
+    "Meshes":
+    {
+        "thermoelectric":
+        {
+            "Import":
+            {
+                "filename":"$cfgdir/HL-31_H1_np8.json",
+                "partition":0
+            }
+        }
+    },
+----
+
+Note the `partition` key is set to `False`. It means that the mesh will be used as is.
+As a consequence, you must **run** the case with the appropriate number of partitions.
+Here, as we use a mesh partitionned in 8 parts, we must type:
+
+[source,mpirun]
+----
+```
+mpirun -np 8 feelpp_toolbox_thermoelectric --config-file HL-31.cfg 
+----
+
+====
+
+== Use a geo file
+
+* Move the geo file to the directory containing the cfg file
+* Edit the json file: eg. HL-31_H1.json,
+* Replace the girder link by the actual mesh:
+
+[source,json]
+----
+    "Meshes":
+    {
+        "thermoelectric":
+        {
+            "Import":
+            {
+                "filename":"$cfgdir/HL-31_H1.geo",
+                "partition":1
+            }
+        }
+    },
+----
+
+[NOTE]
+====
+The `Physical` in the geo file **must be the same** as in the msh file.
+====
+

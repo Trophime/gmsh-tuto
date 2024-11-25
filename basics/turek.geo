@@ -1,18 +1,18 @@
 SetFactory("Built-in");
 
-R = DefineNumber[ 1, Name "Parameters/R" ];
-Lc_channel = DefineNumber[ 1, Name "Parameters/cL" ];
-cX = DefineNumber[ -2, Name "Parameters/cX" ];
-cLx = DefineNumber[ 30, Name "Parameters/cLx" ];
-cLy = DefineNumber[ 10, Name "Parameters/cLy" ];
+R = DefineNumber[ 0.05, Name "Parameters/R" ];
+Lc_channel = DefineNumber[ 0.03, Name "Parameters/cL" ];
+cX = DefineNumber[ -0.2, Name "Parameters/cX" ];
+cLx = DefineNumber[ 2.5, Name "Parameters/cLx" ];
+cLy = DefineNumber[ 0.41, Name "Parameters/cLy" ];
 
 // X = DefineNumber[ 0.1, Name "Parameters/X" ];
-Lc_flag = DefineNumber[ 0.1, Name "Parameters/Lc_flag" ];
-Lx = DefineNumber[ 1, Name "Parameters/Lx" ];
-Ly = DefineNumber[ 0.1, Name "Parameters/Ly" ];
-Ltail = DefineNumber[ 2, Name "Parameters/Lx_tail" ];
-Lc_tail = DefineNumber[ 0.01, Name "Parameters/Lc_tail" ];
-Lc_pole = DefineNumber[ 0.05, Name "Parameters/Lc_pole" ];
+Lc_flag = DefineNumber[ 0.006, Name "Parameters/Lc_flag" ];
+Lx = DefineNumber[ 0.35101, Name "Parameters/Lx" ];
+Ly = DefineNumber[ 0.02, Name "Parameters/Ly" ];
+Ltail = DefineNumber[ 0.9, Name "Parameters/Lx_tail" ];
+Lc_tail = DefineNumber[ 0.012, Name "Parameters/Lc_tail" ];
+Lc_pole = DefineNumber[ 0.006, Name "Parameters/Lc_pole" ];
 
 O=newp; Point(O) = {0, 0, 0, Lc_pole};
 
@@ -27,7 +27,7 @@ X = R * Cos(alpha);
 // if X is given, need to change flag
 p1=newp; Point(p1) = {X, -Ly/2, 0, Lc_pole};
 p2=newp; Point(p2) = {X+Lx, -Ly/2, 0, Lc_flag};
-p3=newp; Point(p3) = {X+Lx, 0, 0, Lc_tail};
+p3=newp; Point(p3) = {X+Lx, 0, 0, Lc_flag};
 p4=newp; Point(p4) = {X+Lx, Ly/2, 0, Lc_flag};
 p5=newp; Point(p5) = {X, Ly/2, 0, Lc_pole};
 
@@ -70,5 +70,12 @@ loopchannel = newl; Curve Loop(loopchannel) = {lc1, lc2, lc3, lc4};
 channel = news; Plane Surface(channel) = {loopchannel, -loopflag, -looppole, -looptail};
 
 Physical Surface("solid") = {flag};
-Physical Line("tail") = {tail};
+Physical Line("FEELPP_GMSH_PHYSICALNAME_IGNORED") = {tail};
 Physical Surface("fluid") = {channel};
+
+Physical Line("fluid-inlet") = {16};
+Physical Line("fluid-wall") = {13,15};
+Physical Line("fluid-cylinder") = {10, 11};
+Physical Line("fluid-outlet") = {14};
+Physical Line("fsi-wall") = {1, 2, 3, 4};
+Physical Line("solid-fixed") = {5};

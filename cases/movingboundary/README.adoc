@@ -1,0 +1,30 @@
+= The case
+
+see link:https://docs.feelpp.org/toolboxes/latest/fsi/box/index.html[feelpp Fluid Structure Interation cases]
+
+== Data files
+
+
+=== Inspect the geometry with gmsh
+
+You can view the geometry by running `gmsh`:
+
+```
+gmsh fsi.geo
+```
+
+== Running the case
+
+To run the simulation on 4 nodes:
+
+```
+mpirun -np 4 feelpp_toolbox_fsi_2d --config-file fsi.cf
+```
+
+== Viewing the results
+
+The results are stored in `/home/feelpp/feelppdb/toolboxes/fsi/movingboundary/np_4`
+if you run the simulation in the devcontainer. If not, check the output of of the command to 
+get the name of the basedir of the results.
+
+To view the results, you can either run paraview or use some pyvista scripts (see notes on jupyter)
