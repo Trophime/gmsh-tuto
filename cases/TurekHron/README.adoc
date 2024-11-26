@@ -17,8 +17,16 @@ gmsh fsi.geo
 To run the simulation on 4 nodes:
 
 ```
-mpirun -np 4 feelpp_toolbox_fsi_2d --config-file fsi.cfg
+mpirun -np 4 feelpp_toolbox_fsi_2d  [--directory=$PWD/myfeelppdb] --config-file fsi.cfg
 ```
+
+[NOTE]
+====
+The optional command line option `--directory=$PWD/myfeelppdb` enables to create result main directory in a specific directory.
+This option is usefull when running simulations on a HPC cluster.
+
+On `gaya`, it is recommended to set this directory to a directory on a "rapid" filesystem - aka `/data/scratch/$USERNAME`.
+====
 
 == Viewing the results
 
