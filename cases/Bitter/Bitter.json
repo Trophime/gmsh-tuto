@@ -1,0 +1,113 @@
+// -*- mode: javascript -*-
+{
+    "Name":"Bitter",
+    "ShortName":"Bitter",
+    "Meshes":
+    {
+        "thermoelectric":
+        {
+            "Import":
+            {
+                "filename":"$cfgdir/Bitter.geo",
+                "partition":1
+            }
+        }
+    },
+    "Materials":
+    {
+        "Cu":
+        {
+            "k":"0.370",//[ W/(mm*K) ]
+            "sigma":"53e3"//[ 1/Ohm/(mm) ]
+        }
+    },
+    "BoundaryConditions":
+    {
+        "heat":
+        {
+            "convective_heat_flux":
+            {
+                "Channel":
+                {
+                    "h":"0.08", // h
+                    "Text":"293" // T_c
+                },
+		"Cool2":
+		{
+                    "h":"0.08", // h
+                    "Text":"293" // T_c
+		}
+            },
+            "flux":
+            {
+                "insulation":
+                {
+                    "markers":["In", "Out", "Cool1"],
+                    "expr":"0"
+                }
+            }
+        },
+        "electric":
+        {
+            "ground":{ "markers":"In" },
+            "electric_potential":{
+                "Out":{
+                    "expr":"0.03125"
+                }
+            }
+        }
+    },
+    "PostProcess":
+    {
+        "thermoelectric":
+        {
+            "Exports":
+            {
+                "fields":["heat.temperature","electric.electric-potential","electric.current-density","electric.electric-field","pid"]
+            }
+        },
+        "heat":
+        {
+            "Measures":
+            {
+                "Statistics":
+                {
+                    "Flux%1%":
+                    {
+                        "type":"integrate",
+                        "expr":"-materials_Cu_k*heat_dn_T:materials_Cu_k:heat_dn_T",
+                        "markers": "%1%",
+			"index1": ["Channel", "Cool1", "Cool2", "In", "Out"]
+                    },
+                    "temp":
+                    {
+                        "type":["max","mean","min"],
+                        "field":"temperature"
+                    }
+                }
+            }
+        },
+        "electric":
+        {
+            "Measures":
+            {
+                "Statistics":
+                {
+                    "Intensity%1%":
+                    {
+                        "type":"integrate",
+                        "expr":"-materials_Cu_sigma*electric_dn_P:materials_Cu_sigma:electric_dn_P",
+                        "markers": "%1%",
+			"index1": ["In", "Out]"
+                    },
+                    "Power":
+                    {
+                        "type":"integrate",
+                        "expr":"materials_Cu_sigma*(electric_grad_P_0^2+electric_grad_P_1^2+electric_grad_P_2^2):materials_Cu_sigma:electric_grad_P_0:electric_grad_P_1:electric_grad_P_2",
+                        "markers":"Cu"
+                    }
+                }
+            }
+        }
+    }
+}
