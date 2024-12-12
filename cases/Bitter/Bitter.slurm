@@ -16,6 +16,5 @@ module load hpcx
 
 # ts.cfg
 mpiexec -bind-to core feelpp_toolbox_thermoelectric \
-        --config-files Bitter.cfg \
-        --thermo-electric-scalability-save=1 --thermo-electric.heat.scalability-save=1 --thermo-electric.electric.scalability-save=1
+        --config-files Bitter.cfg 
 
