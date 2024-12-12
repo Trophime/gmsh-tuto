@@ -17,8 +17,8 @@
     {
         "Cu":
         {
-            "k":"0.370",//[ W/(mm*K) ]
-            "sigma":"53e3"//[ 1/Ohm/(mm) ]
+            "k":"0.370",
+            "sigma":"53e3"
         }
     },
     "BoundaryConditions":
@@ -29,13 +29,13 @@
             {
                 "Channel":
                 {
-                    "h":"0.08", // h
-                    "Text":"293" // T_c
+                    "h":"0.08",
+                    "Text":"293"
                 },
 		"Cool2":
 		{
-                    "h":"0.08", // h
-                    "Text":"293" // T_c
+                    "h":"0.08",
+                    "Text":"293" 
 		}
             },
             "flux":
@@ -98,7 +98,7 @@
                         "type":"integrate",
                         "expr":"-materials_Cu_sigma*electric_dn_P:materials_Cu_sigma:electric_dn_P",
                         "markers": "%1%",
-			"index1": ["In", "Out]"
+			"index1": ["In", "Out"]
                     },
                     "Power":
                     {
