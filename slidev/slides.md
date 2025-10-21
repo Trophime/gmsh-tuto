@@ -841,7 +841,7 @@ l1 = gmsh.model.geo.addLine(p1, p2)
 l2 = ...
 
 # create surface
-gmsh.model.geo.addCurveLoop([l1, 2, 3, 4], 1)
+gmsh.model.geo.addCurveLoop([l1, l2, l3, l4], 1)
 gmsh.model.geo.addPlaneSurface([1], 1)
 
 # Force synchro
