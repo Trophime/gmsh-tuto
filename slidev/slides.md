@@ -1126,7 +1126,7 @@ hideInToc: true
 Merge "square.geo";
 Lz =1;
 out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} };};
-Physical Volume("cube") = {out[0]};
+Physical Volume("cube") = {out[1};
 ```
 
 * add **Recombine** to get an hex mesh:
@@ -1135,7 +1135,7 @@ Physical Volume("cube") = {out[0]};
 Merge "square-transfinite-line.geo";
 Lz =1;
 out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} }; Recombine;}
-Physical Volume("cube") = {out[0]};
+Physical Volume("cube") = {out[1]};
 ```
 
 * see [t3.geo](https://gmsh.info/doc/texinfo/gmsh.html#t3)
