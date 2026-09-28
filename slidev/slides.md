@@ -919,7 +919,7 @@ ov, ovv = gmsh.model.occ.fragment([(2, A_id)], [(2, j) for j in flat_list])
 
 print("fragment produced surfaces:")
 for e in ov:
-    print(e)ov, ovv = gmsh.model.occ.fragment([(2, A_id)], [(2, j) for j in flat_list])
+    print(e)
 
 # ovv contains the parent-child relationships for all the input entities:
 print("before/after fragment relations:")
