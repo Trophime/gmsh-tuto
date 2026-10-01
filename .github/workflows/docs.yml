@@ -33,11 +33,10 @@ jobs:
       run: |
           cd slidev
           npm install
-          npm i -g @slidev/cli
     - name: Build Site
       run: |
           cd slidev
-          slidev build --base /gmsh-tuto/
+          npm run build -- --base /gmsh-tuto/
     - name: Deploy
       if: ${{ github.ref_name == 'main' }}
       uses: JamesIves/github-pages-deploy-action@v4
