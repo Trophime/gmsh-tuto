@@ -841,7 +841,7 @@ l1 = gmsh.model.geo.addLine(p1, p2)
 l2 = ...
 
 # create surface
-gmsh.model.geo.addCurveLoop([l1, 2, 3, 4], 1)
+gmsh.model.geo.addCurveLoop([l1, l2, l3, l4], 1)
 gmsh.model.geo.addPlaneSurface([1], 1)
 
 # Force synchro
@@ -919,7 +919,7 @@ ov, ovv = gmsh.model.occ.fragment([(2, A_id)], [(2, j) for j in flat_list])
 
 print("fragment produced surfaces:")
 for e in ov:
-    print(e)ov, ovv = gmsh.model.occ.fragment([(2, A_id)], [(2, j) for j in flat_list])
+    print(e)
 
 # ovv contains the parent-child relationships for all the input entities:
 print("before/after fragment relations:")
@@ -1126,7 +1126,7 @@ hideInToc: true
 Merge "square.geo";
 Lz =1;
 out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} };};
-Physical Volume("cube") = {out[0]};
+Physical Volume("cube") = {out[1};
 ```
 
 * add **Recombine** to get an hex mesh:
@@ -1135,7 +1135,7 @@ Physical Volume("cube") = {out[0]};
 Merge "square-transfinite-line.geo";
 Lz =1;
 out[] = Extrude {0,0,Lz} {Surface{1}; Layers{ {8,2}, {0.25,1} }; Recombine;}
-Physical Volume("cube") = {out[0]};
+Physical Volume("cube") = {out[1]};
 ```
 
 * see [t3.geo](https://gmsh.info/doc/texinfo/gmsh.html#t3)
