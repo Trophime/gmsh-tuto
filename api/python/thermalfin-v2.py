@@ -1,4 +1,5 @@
 import argparse
+import math
 import sys
 
 import gmsh
@@ -44,6 +45,27 @@ def main():
     d = args.d
     w = args.width
     lc = args.lc
+
+    # check parameters
+    if N < 1:
+        parser.error(f"N must be at least 1 (got N={N})")
+    for name, value in [("L", L), ("t", t), ("width", w), ("lc", lc)]:
+        if value <= 0:
+            parser.error(f"{name} must be positive (got {name}={value})")
+
+    # fin i lies in [d + (i-1)*(d+t), i*(d+t)]: consecutive fins are separated by d,
+    # so they overlap if d < 0 and touch if d = 0
+    if d <= 0:
+        parser.error(f"d must be positive, otherwise the fins overlap or touch (got d={d})")
+
+    # in 3D, a cylinder fin must enclose a box post: the fin radius w/2 + L must exceed
+    # the post half diagonal w/sqrt(2), otherwise the post corners cut the fin into pieces
+    box_post_cylinder_fin = dim == 3 and args.root == "box" and args.fin == "cylinder"
+    if box_post_cylinder_fin and w / 2.0 + L <= w / math.sqrt(2):
+        parser.error(
+            f"L must be greater than (sqrt(2)-1)*width/2 = {(math.sqrt(2) - 1) * w / 2.0:g} "
+            f"for a cylinder fin around a box post (got L={L})"
+        )
 
     # init gmsh
     gmsh.initialize()
